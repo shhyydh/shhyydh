@@ -127,6 +127,7 @@ const onBack = () => emit("back");
   flex-direction: column;
   line-height: 0.9;
   letter-spacing: -0.04em;
+  font-family: var(--font-sans);
   /* default font sizes via clamp; JS overrides during morph */
   align-items: flex-start;
 }

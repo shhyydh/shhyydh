@@ -12,7 +12,8 @@
   --color-accent-hover: #082567;
   --color-accent-faint: rgba(30, 64, 175, 0.2);
 
-  --font-sans: "Roboto Flex", "Roboto Flex Fallback", system-ui, sans-serif;
+  --font-sans: "Google Sans Flex Variable", system-ui, sans-serif;
+  --font-mono: "Google Sans Code Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --ease-dock: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -27,11 +28,14 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--color-bg);
     color: var(--color-ink);
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
   }
   body {
     margin: 0;
     min-height: 100dvh;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
   }
 }
 

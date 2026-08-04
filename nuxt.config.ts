@@ -7,10 +7,13 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxt/content",
-    "@nuxtjs/google-fonts",
   ],
 
-  css: ["~/assets/css/main.css"],
+  css: [
+    "~/assets/css/main.css",
+    "@fontsource-variable/google-sans-flex/wght.css",
+    "@fontsource-variable/google-sans-code",
+  ],
 
   vite: {
     plugins: [tailwindcss()],
@@ -19,16 +22,6 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
     appManifest: false,
-  },
-
-  googleFonts: {
-    families: {
-      "Roboto Flex": [100, 300, 400, 500, 700, 800, 900],
-    },
-    display: "swap",
-    preconnect: true,
-    download: true,
-    inject: true,
   },
 
   content: {
