@@ -108,17 +108,17 @@ const goHome = () => {
 <style scoped>
 .page-root {
   position: relative;
-  /* keep the page-root at least 100dvh tall so the hero's in-flow slot
-     (when position: relative at scrollY=0) doesn't cause layout shift;
-     useHeroMorph makes the hero position: fixed once t > 0, so the page
-     retains its scroll height. */
+  /* The home hero is always position:fixed on desktop (see useHeroMorph), so it
+     needs no in-flow slot; this min-height just guarantees a stable first viewport. */
   min-height: 100dvh;
 }
 
-/* TEMP (2026-08-05): keeps the page scrollable while the timeline is commented
-   out, so the hero dock morph can still be exercised. Delete with the temp block. */
+/* TEMP (2026-08-05): provides ALL of the page's scroll room while the timeline is
+   commented out — the hero is fixed, so nothing else contributes scroll height.
+   300dvh = 100dvh for the dock morph + room to keep scrolling past the docked hero.
+   Delete with the temp block. */
 .hero-scroll-spacer {
-  height: 200dvh;
+  height: 300dvh;
 }
 
 .timeline-column {

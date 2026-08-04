@@ -4,7 +4,7 @@
       class="hidden md:block absolute -left-20 top-0 bottom-0 w-[5px] bg-black/60"
       aria-hidden="true"
     />
-    <div class="space-y-26 pt-20 mb:pt-0 text-center md:text-left">
+    <div class="space-y-26 pt-20 md:pt-0 text-center md:text-left">
       <div v-for="group in groups" :key="group.year">
         <h2
           data-timeline-item

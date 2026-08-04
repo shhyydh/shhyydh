@@ -133,13 +133,11 @@ const onBack = () => emit("back");
 .hero-line-1 {
   font-weight: 800;
   font-size: clamp(3.5rem, 12vw, 11rem);
-  transition: font-size 0.1s linear;
 }
 .hero-line-2 {
   font-weight: 700;
   font-size: clamp(2rem, 7vw, 7rem);
   margin-top: 0.25rem;
-  transition: font-size 0.1s linear;
 }
 
 .hero-shell[data-state="sidebar"] .hero-name {
@@ -170,7 +168,6 @@ const onBack = () => emit("back");
 /* mobile — hero always in natural relative centered state, no morph */
 @media (max-width: 767px) {
   .hero-shell,
-  .hero-shell[data-state="docked"],
   .hero-shell[data-state="sidebar"] {
     position: relative !important;
     top: auto !important; left: auto !important;
@@ -194,7 +191,6 @@ const onBack = () => emit("back");
     display: none !important;
   }
   .hero-shell .hero-socials,
-  .hero-shell[data-state="docked"] .hero-socials,
   .hero-shell[data-state="sidebar"] .hero-socials {
     flex-direction: row !important;
     gap: 1.5rem !important;
