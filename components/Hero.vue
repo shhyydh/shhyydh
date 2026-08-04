@@ -38,15 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
-
 const props = defineProps<{
-  state: "centered" | "docked" | "sidebar";
+  state: "index" | "sidebar";
 }>();
 
 const emit = defineEmits<{ (e: "back"): void }>();
 
-const el = ref<HTMLElement | null>(null) as Ref<HTMLElement | null>;
+const el = ref<HTMLElement | null>(null);
+
+// expose ref so parent (pages/index.vue) can pass it to useHeroMorph
+defineExpose({ el });
 
 const socials = [
   {
@@ -75,24 +76,12 @@ const onBack = () => emit("back");
   z-index: 30;
   display: flex;
   box-sizing: border-box;
-  transition:
-    top 0.5s var(--ease-dock),
-    left 0.5s var(--ease-dock),
-    width 0.5s var(--ease-dock),
-    height 0.5s var(--ease-dock),
-    transform 0.5s var(--ease-dock),
-    opacity 0.45s var(--ease-dock),
-    padding 0.5s var(--ease-dock),
-    flex-direction 0s,
-    align-items 0.5s var(--ease-dock),
-    justify-content 0.5s var(--ease-dock);
-  will-change: transform, opacity;
-}
+  will-change: transform, width, opacity;
 
-/* state 0 — centered, IN-NORMAL-FLOW so page can scroll past it */
-.hero-shell[data-state="centered"] {
+  /* Natural in-flow state (also used at t=0 / scrollY=0 on the home page).
+     The useHeroMorph composable overrides these inline as the user scrolls. */
   position: relative;
-  top: 0; left: 0;
+  top: auto; left: auto;
   width: 100%;
   height: 100dvh;
   flex-direction: column;
@@ -102,19 +91,9 @@ const onBack = () => emit("back");
   padding: 2rem;
 }
 
-/* state 1 — docked left, FIXED so it sticks while page scrolls */
-.hero-shell[data-state="docked"] {
-  position: fixed;
-  top: 0; left: 0;
-  width: 38%;
-  height: 100dvh;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 3rem;
-}
-
-/* state 2 — slim vertical navbar on the left */
+/* state 2 — slim vertical navbar. Used on /projects/:slug routes.
+   Injected by the parent via :state="sidebar".
+   The useHeroMorph composable doesn't touch this state. */
 .hero-shell[data-state="sidebar"] {
   position: fixed;
   top: 0; left: 0;
@@ -148,25 +127,26 @@ const onBack = () => emit("back");
   flex-direction: column;
   line-height: 0.9;
   letter-spacing: -0.04em;
-  transition: opacity 0.45s var(--ease-dock), transform 0.5s var(--ease-dock);
+  /* default font sizes via clamp; JS overrides during morph */
+  align-items: flex-start;
 }
 .hero-line-1 {
   font-weight: 800;
   font-size: clamp(3.5rem, 12vw, 11rem);
-  transition: font-size 0.5s var(--ease-dock);
+  transition: font-size 0.1s linear;
 }
 .hero-line-2 {
   font-weight: 700;
   font-size: clamp(2rem, 7vw, 7rem);
   margin-top: 0.25rem;
-  transition: font-size 0.5s var(--ease-dock);
+  transition: font-size 0.1s linear;
 }
-.hero-shell[data-state="docked"] .hero-line-1 { font-size: clamp(2.5rem, 5vw, 6rem); }
-.hero-shell[data-state="docked"] .hero-line-2 { font-size: clamp(1.5rem, 3.5vw, 4rem); }
+
 .hero-shell[data-state="sidebar"] .hero-name {
   opacity: 0;
   transform: translateX(-30px);
   pointer-events: none;
+  transition: opacity 0.45s var(--ease-dock), transform 0.5s var(--ease-dock);
 }
 
 .hero-socials {
@@ -174,22 +154,20 @@ const onBack = () => emit("back");
   gap: 2rem;
   align-items: center;
   justify-content: center;
-  transition: flex-direction 0s, gap 0.5s var(--ease-dock);
 }
 .hero-socials :deep(a) {
   color: var(--color-ink);
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition: color 0.3s ease;
   display: inline-flex;
   line-height: 0;
 }
 .hero-socials :deep(a):hover { color: var(--color-accent-hover); }
-.hero-shell[data-state="docked"] .hero-socials { gap: 1.5rem; }
 .hero-shell[data-state="sidebar"] .hero-socials {
   flex-direction: column;
   gap: 1.25rem;
 }
 
-/* mobile — hero is normal-flow centered at top of page, no docking/sidebar morph */
+/* mobile — hero always in natural relative centered state, no morph */
 @media (max-width: 767px) {
   .hero-shell,
   .hero-shell[data-state="docked"],
