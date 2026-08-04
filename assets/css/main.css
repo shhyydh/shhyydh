@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@source "../components/**/*.vue";
+@source "../pages/**/*.vue";
+@source "../layouts/**/*.vue";
+@source "../app.vue";
+
+@theme {
+  --color-bg: #f3f8f9;
+  --color-ink: #000000;
+  --color-accent: #1e40af;
+  --color-accent-hover: #082567;
+  --color-accent-faint: rgba(30, 64, 175, 0.2);
+
+  --font-sans: "Roboto Flex", "Roboto Flex Fallback", system-ui, sans-serif;
+
+  --ease-dock: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .will-change-transform {
+    will-change: transform;
+  }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 26px,
+      black 38px,
+      black calc(100% - 38px),
+      transparent calc(100% - 26px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 26px,
+      black 38px,
+      black calc(100% - 38px),
+      transparent calc(100% - 26px),
+      transparent 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+}
+
+::view-transition-old(hero),
+::view-transition-new(hero) {
+  animation-duration: 0.5s;
+  animation-timing-function: var(--ease-dock);
+}
