@@ -75,6 +75,13 @@ export function useHeroMorph(
     if (soc) {
       soc.style.transform = "";
       soc.style.gap = "";
+      soc.style.fontSize = "";
+    }
+    const scroll = el.querySelector<HTMLElement>(".hero-scroll");
+    if (scroll) {
+      scroll.style.transform = "";
+      scroll.style.fontSize = "";
+      scroll.style.opacity = "";
     }
   };
 
@@ -100,6 +107,7 @@ export function useHeroMorph(
 
     const name = textBlock;
     const soc = el.querySelector<HTMLElement>(".hero-socials");
+    const scroll = el.querySelector<HTMLElement>(".hero-scroll");
     if (name) {
       const textWidth = name.offsetWidth;
       const heroW0 = vw; // anchor at t=0: the full viewport
@@ -114,6 +122,7 @@ export function useHeroMorph(
       const tx = lerp(tx0, tx1, t);
       name.style.transform = `translateX(${tx}px)`;
       if (soc) soc.style.transform = `translateX(${tx}px)`;
+      if (scroll) scroll.style.transform = `translateX(${tx}px)`;
     }
 
     // Font-size lerp for the two hero lines
@@ -134,6 +143,18 @@ export function useHeroMorph(
 
     // Socials gap lerps to tighter when docked
     if (soc) soc.style.gap = `${lerp(2, 1.5, t)}rem`;
+
+    // Solid icons shrink with the text so the whole block feels like one unit:
+    // font-size on the socials row drives the (1em-based) iconify spans.
+    if (soc) soc.style.fontSize = `${lerp(38, 30, t)}px`;
+
+    // "scroll :)" hint — rides with the text block, shrinks slightly, and fades
+    // away entirely by the time the dock completes (the hint's job is done once
+    // the content below is in view; it returns when scrolled back to the top).
+    if (scroll) {
+      scroll.style.fontSize = `${lerp(1.05, 0.9, t)}rem`;
+      scroll.style.opacity = `${1 - t}`;
+    }
   };
 
   const tick = () => {

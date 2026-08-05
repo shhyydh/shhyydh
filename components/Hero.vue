@@ -23,6 +23,8 @@
       <div class="hero-line-2">I'm Shahid</div>
     </div>
 
+    <div class="hero-scroll" aria-hidden="true">scroll :)</div>
+
     <nav class="hero-socials" aria-label="Social links">
       <a
         v-for="s in socials"
@@ -32,7 +34,7 @@
         rel="noreferrer"
         :aria-label="s.label"
       >
-        <Icon :name="s.icon" :size="38" />
+        <Icon :name="s.icon" />
       </a>
     </nav>
   </aside>
@@ -78,7 +80,9 @@ const onBack = () => emit("back");
 
 <style scoped>
 .hero-shell {
-  background: var(--color-bg);
+  /* Translucent so the fixed HexBackground flows through the whole site surface;
+     the index state overrides to fully transparent, the sidebar rail keeps this. */
+  background: rgba(243, 248, 249, 0.9);
   z-index: 30;
   display: flex;
   box-sizing: border-box;
@@ -165,13 +169,39 @@ const onBack = () => emit("back");
   transition: opacity 0.45s var(--ease-dock), transform 0.5s var(--ease-dock);
 }
 
+/* "scroll :)" hint under the name — fades out as the dock completes (JS lerps
+   opacity + font-size during the morph). Bounce nudges downward; disabled under
+   prefers-reduced-motion. Hidden entirely in the sidebar state. */
+.hero-scroll {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.18em;
+  color: rgba(0, 0, 0, 0.5);
+  animation: hero-scroll-bounce 2s ease-in-out infinite;
+}
+.hero-shell[data-state="sidebar"] .hero-scroll {
+  display: none;
+}
+/* Animate the CSS `translate` property (not `transform`) so the bounce composes
+   with the JS-driven translateX instead of overriding it. */
+@keyframes hero-scroll-bounce {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll { animation: none; }
+}
+
 .hero-socials {
   display: flex;
   gap: 2rem;
   align-items: center;
   justify-content: center;
+  /* Icon size: the iconify spans are 1em-based, so the row's font-size drives the
+     solid icons (anchors inherit). useHeroMorph lerps this inline 38px → 30px. */
+  font-size: 38px;
 }
-.hero-socials :deep(a) {
+.hero-socials a {
   color: var(--color-ink);
   transition: color 0.3s ease;
   display: inline-flex;

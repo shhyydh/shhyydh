@@ -132,7 +132,9 @@ const groups: TimelineGroup[] = [
 }
 
 .timeline-column {
-  background: var(--color-bg);
+  /* Slightly translucent so the fixed HexBackground clusters show through faintly
+     while the content scrolls over them (the "floating over one background" feel). */
+  background: rgba(243, 248, 249, 0.9);
   padding: 6rem 1.5rem 8rem;
   /* edge-fade mask always active (invisible above content area, harmless if
      content fills the column) — mirrors faraz's signature mask effect */

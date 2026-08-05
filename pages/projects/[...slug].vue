@@ -39,7 +39,8 @@ const goHome = () => navigateTo("/");
 .project-main {
   width: 100%;
   padding: 6rem 1.5rem 8rem;
-  background: var(--color-bg);
+  /* Translucent like the home timeline so the fixed HexBackground shows through. */
+  background: rgba(243, 248, 249, 0.9);
   box-sizing: border-box;
   min-height: 100dvh;
 }
