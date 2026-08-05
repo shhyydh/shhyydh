@@ -18,7 +18,11 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const slug = computed(() => String(route.params.slug));
+// Catch-all: /projects/footwearcontent and /projects/bezgoFresh/operationsbotcontent
+// both arrive here; params.slug is an array of segments.
+const slug = computed(() =>
+  (Array.isArray(route.params.slug) ? route.params.slug.join("/") : String(route.params.slug))
+);
 
 const { data: doc } = await useAsyncData(
   () => `project-${slug.value}`,

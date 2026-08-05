@@ -2,31 +2,18 @@
   <div class="page-root">
     <Hero ref="hero" state="index" @back="goHome" />
 
-    <!-- TEMP (2026-08-05): timeline content commented out while the hero section is
-         being finished. .hero-scroll-spacer keeps the page scrollable so the dock
-         morph stays testable. Restore the timeline block and delete the spacer when
-         real content arrives. -->
-    <div class="hero-scroll-spacer" aria-hidden="true" />
-
-    <!--
     <section class="timeline-column">
-      <p
-        data-timeline-item
-        class="intro"
-      >
-        {{ intro }}
-      </p>
+      <h2 class="intro-heading">myself</h2>
+      <p class="intro">{{ intro }}</p>
       <Timeline :groups="groups" />
       <div class="footer-spacer" />
     </section>
-    -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { useHeroMorph } from "~/composables/useHeroMorph";
-// TEMP: useTimelineReveal commented out with the timeline block below.
-// import { useTimelineReveal } from "~/composables/useTimelineReveal";
+import { useTimelineReveal } from "~/composables/useTimelineReveal";
 
 const hero = ref<{ el: HTMLElement | null } | null>(null);
 
@@ -38,71 +25,91 @@ const heroEl = computed(() => hero.value?.el ?? null);
 const heroElRef = { get value() { return hero.value?.el ?? null; } } as any;
 useHeroMorph(heroElRef, { startY: 0, endY: undefined });
 
-// useTimelineReveal();
+useTimelineReveal();
 
 const goHome = () => {
   if (import.meta.client) window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-// TEMP (2026-08-05): intro + groups placeholders commented out with the timeline
-// block. Restore / replace with real content when the timeline is brought back.
-// const intro =
-//   "Lorem ipsum placeholder — replace with a 2-3 sentence introduction about who you are, what you build, and what you care about.";
-//
-// const groups = [
-//   {
-//     year: "Placeholder Year A",
-//     entries: [
-//       {
-//         title: "First project title here",
-//         summary:
-//           "Short summary of what this milestone was, the outcome, and what you learned.\n2-3 lines reads best.",
-//         project: "first-project",
-//       },
-//       {
-//         title: "Something you did in school / work",
-//         summary: "Another entry. Leave the `project` field out if it's not a link.",
-//       },
-//     ],
-//   },
-//   {
-//     year: "Placeholder Year B",
-//     entries: [
-//       {
-//         title: "A bigger project with its own page",
-//         summary:
-//           "Because this entry has `project: 'second-project'`, clicking the title opens /projects/second-project — triggering the state-2 sidebar morph.",
-//         project: "second-project",
-//       },
-//       {
-//         title: "A non-linked milestone",
-//         summary: "Showing the difference between linked and non-linked entries.",
-//       },
-//     ],
-//   },
-//   {
-//     year: "Placeholder Year C",
-//     entries: [
-//       {
-//         title: "Year three entry",
-//         summary: "More content so the timeline has vertical room to scroll through.",
-//       },
-//       {
-//         title: "Another one",
-//         summary: "Each entry uses the same Faraz-style fade-in reveal effect.",
-//       },
-//     ],
-//   },
-//   {
-//     year: "Placeholder Year D",
-//     entries: [
-//       {
-//         title: "Final milestone",
-//         summary: "The page should now scroll comfortably far.",
-//       },
-//     ],
-//   },
-// ];
+type TimelineEntry = { title: string; summary: string; project?: string };
+type TimelineGroup = { year: string; entries: TimelineEntry[] };
+
+// Intro copy: lorem ipsum placeholder until the user supplies the final "myself"
+// text. Keep it short (2-3 sentences) so it reads like faraz's intro.
+const intro =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
+// Curated from content/mainpagecontent.md (lightly copy-edited). Entries with a
+// `project` slug link to /projects/:slug — the case-study pages (polish later).
+const groups: TimelineGroup[] = [
+  {
+    year: "Getting here",
+    entries: [
+      {
+        title: "Drawing was the first love",
+        summary: "Still have the sketches I made.",
+      },
+      {
+        title: "Dabbled in trading",
+        summary: "Learned the markets, lost some and gained some.",
+      },
+      {
+        title: "Learned to code",
+        summary: "Built things, didn't deploy them — until now.",
+      },
+    ],
+  },
+  {
+    year: "2024",
+    entries: [
+      {
+        title: "bezgoFresh — the startup we built",
+        summary:
+          "Started with a group of college mates: a cold-chain based last-mile delivery service that connects local vendors with customers online — easing shopping for customers while enabling multiple channels for vendors.",
+      },
+      {
+        title: "Operations bot",
+        summary:
+          "The entire operation ran over WhatsApp, so we built one custom solution for menu generation, order management, data management, billing, invoice generation and payment links — pushing the operations team from 10 to 50+ orders a day.",
+        project: "bezgofresh/operationsbotcontent",
+      },
+      {
+        title: "Vendor Communication System",
+        summary:
+          "Instead of calling vendors for every order, we gave them a complete solution to receive orders, update menus and see their day-to-day sales and analytics — cutting the daily hassle, miscommunication and spreadsheet juggling.",
+        project: "bezgofresh/vcscontent",
+      },
+      {
+        title: "100+ orders a day",
+        summary:
+          "Combining both solutions, bezgoFresh is now pushing 100+ orders per day.",
+      },
+    ],
+  },
+  {
+    year: "Own projects",
+    entries: [
+      {
+        title: "Footwear management suite",
+        summary:
+          "A complete offline desktop application for small and medium footwear shops — billing, inventory, label design & printing, daily checkouts and analytics.",
+        project: "footwearcontent",
+      },
+      {
+        title: "Travel Agency suite",
+        summary:
+          "A desktop application for travel agencies to track customers, create invoices, track commissions, manage payments and analyse the service delivered so far.",
+        project: "travelsuitecontent",
+      },
+      {
+        title: "AuthEngine",
+        summary:
+          "A self-hosted microservice that delivers login OTPs over WhatsApp — sub-second, zero-cost, with enterprise-grade auth.",
+        project: "authenginecontent",
+      },
+    ],
+  },
+];
 </script>
 
 <style scoped>
@@ -111,14 +118,6 @@ const goHome = () => {
   /* The home hero is always position:fixed on desktop (see useHeroMorph), so it
      needs no in-flow slot; this min-height just guarantees a stable first viewport. */
   min-height: 100dvh;
-}
-
-/* TEMP (2026-08-05): provides ALL of the page's scroll room while the timeline is
-   commented out — the hero is fixed, so nothing else contributes scroll height.
-   300dvh = 100dvh for the dock morph + room to keep scrolling past the docked hero.
-   Delete with the temp block. */
-.hero-scroll-spacer {
-  height: 300dvh;
 }
 
 .timeline-column {
@@ -140,8 +139,17 @@ const goHome = () => {
 
 @media (min-width: 768px) {
   .timeline-column {
-    padding: 6rem 3rem 8rem calc(38% + 3rem);
+    /* 38% docked hero + 2rem gap (the "2-point" gap next to the docked hero) */
+    padding: 6rem 3rem 8rem calc(38% + 2rem);
   }
+}
+
+.intro-heading {
+  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0 0 1.5rem;
 }
 
 .intro {
