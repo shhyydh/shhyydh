@@ -3,9 +3,11 @@
     <Hero ref="hero" state="index" @back="goHome" />
 
     <section class="timeline-column">
-      <h2 class="intro-heading">myself</h2>
-      <p class="intro">{{ intro }}</p>
-      <Timeline :groups="groups" />
+      <div class="timeline-stack">
+        <h2 class="intro-heading">Myself</h2>
+        <p class="intro">{{ intro }}</p>
+        <Timeline :groups="groups" />
+      </div>
       <div class="footer-spacer" />
     </section>
   </div>
@@ -19,7 +21,9 @@ const hero = ref<{ el: HTMLElement | null } | null>(null);
 
 // Composable mutates the hero <aside> element's inline styles each rAF tick.
 // We pass a getter ref so the composable can access the live DOM element
-// after mount even though Hero.vue owns the inner ref.
+// after mount even though Hero.vue owns the inner ref. The timeline column
+// stays below the fold via CSS margin (see .timeline-column), so the dock
+// finishes before any content can appear.
 const heroEl = computed(() => hero.value?.el ?? null);
 // Convert to a Ref-like to satisfy the composable signature
 const heroElRef = { get value() { return hero.value?.el ?? null; } } as any;
@@ -31,10 +35,15 @@ const goHome = () => {
   if (import.meta.client) window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-type TimelineEntry = { title: string; summary: string; project?: string };
+type TimelineEntry = {
+  title: string;
+  summary: string;
+  project?: string;
+  children?: TimelineEntry[];
+};
 type TimelineGroup = { year: string; entries: TimelineEntry[] };
 
-// Intro copy: lorem ipsum placeholder until the user supplies the final "myself"
+// Intro copy: lorem ipsum placeholder until the user supplies the final "Myself"
 // text. Keep it short (2-3 sentences) so it reads like faraz's intro.
 const intro =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
@@ -66,18 +75,20 @@ const groups: TimelineGroup[] = [
         title: "bezgoFresh — the startup we built",
         summary:
           "Started with a group of college mates: a cold-chain based last-mile delivery service that connects local vendors with customers online — easing shopping for customers while enabling multiple channels for vendors.",
-      },
-      {
-        title: "Operations bot",
-        summary:
-          "The entire operation ran over WhatsApp, so we built one custom solution for menu generation, order management, data management, billing, invoice generation and payment links — pushing the operations team from 10 to 50+ orders a day.",
-        project: "bezgofresh/operationsbotcontent",
-      },
-      {
-        title: "Vendor Communication System",
-        summary:
-          "Instead of calling vendors for every order, we gave them a complete solution to receive orders, update menus and see their day-to-day sales and analytics — cutting the daily hassle, miscommunication and spreadsheet juggling.",
-        project: "bezgofresh/vcscontent",
+        children: [
+          {
+            title: "Operations bot",
+            summary:
+              "The entire operation ran over WhatsApp, so we built one custom solution for menu generation, order management, data management, billing, invoice generation and payment links — pushing the operations team from 10 to 50+ orders a day.",
+            project: "bezgofresh/operationsbotcontent",
+          },
+          {
+            title: "Vendor Communication System",
+            summary:
+              "Instead of calling vendors for every order, we gave them a complete solution to receive orders, update menus and see their day-to-day sales and analytics — cutting the daily hassle, miscommunication and spreadsheet juggling.",
+            project: "bezgofresh/vcscontent",
+          },
+        ],
       },
       {
         title: "100+ orders a day",
@@ -87,7 +98,7 @@ const groups: TimelineGroup[] = [
     ],
   },
   {
-    year: "Own projects",
+    year: "Built to sell & repurpose",
     entries: [
       {
         title: "Footwear management suite",
@@ -141,6 +152,30 @@ const groups: TimelineGroup[] = [
   .timeline-column {
     /* 38% docked hero + 2rem gap (the "2-point" gap next to the docked hero) */
     padding: 6rem 3rem 8rem calc(38% + 2rem);
+    /* Hold the column below the fold until the dock transform (one viewport of
+       scroll) has finished; only then does it scroll up from the bottom like
+       normal page content. */
+    margin-top: 200dvh;
+  }
+}
+
+/* The timeline spine: runs from the "Myself" heading all the way down the
+   timeline (used to start only at the first group header inside Timeline.vue). */
+.timeline-stack {
+  position: relative;
+}
+.timeline-stack::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -5rem;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 767px) {
+  .timeline-stack::before {
+    display: none;
   }
 }
 

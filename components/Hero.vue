@@ -19,8 +19,8 @@
     </NuxtLink>
 
     <div class="hero-name">
-      <div class="hero-line-1">hi.</div>
-      <div class="hero-line-2">I'm shhyd</div>
+      <div class="hero-line-1">Hi.</div>
+      <div class="hero-line-2">I'm Shahid</div>
     </div>
 
     <nav class="hero-socials" aria-label="Social links">
@@ -31,8 +31,9 @@
         :target="s.href.startsWith('http') ? '_blank' : undefined"
         rel="noreferrer"
         :aria-label="s.label"
-        v-html="s.svg"
-      />
+      >
+        <Icon :name="s.icon" :size="38" />
+      </a>
     </nav>
   </aside>
 </template>
@@ -53,17 +54,22 @@ const socials = [
   {
     label: "GitHub",
     href: "https://github.com/shhyd",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
+    icon: "simple-icons:github",
   },
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/shhyd",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>`,
+    icon: "simple-icons:linkedin",
+  },
+  {
+    label: "Substack",
+    href: "https://shhyd.substack.com",
+    icon: "simple-icons:substack",
   },
   {
     label: "Email",
     href: "mailto:hello@shhyd.dev",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>`,
+    icon: "mdi:email",
   },
 ];
 
@@ -89,6 +95,17 @@ const onBack = () => emit("back");
   justify-content: center;
   gap: 1.5rem;
   padding: 2rem;
+}
+
+/* state 1 — home page. The shell is a transparent full-viewport overlay that
+   never shrinks: useHeroMorph moves only the name + socials. pointer-events
+   pass through so the (gated) timeline content and its links stay clickable. */
+.hero-shell[data-state="index"] {
+  background: transparent;
+  pointer-events: none;
+}
+.hero-shell[data-state="index"] .hero-socials {
+  pointer-events: auto;
 }
 
 /* state 2 — slim vertical navbar. Used on /projects/:slug routes.

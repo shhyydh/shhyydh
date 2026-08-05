@@ -3,17 +3,18 @@ import { onMounted, onBeforeUnmount, type Ref } from "vue";
 /**
  * Continuous scroll-linked hero morph — vanilla JS, no animation library.
  *
- * Rev 2 — fixes the "stuck at the start" feel:
- *   - The hero is ALWAYS `position: fixed` (top:0 left:0) on desktop, from the
- *     first rAF tick. There is no flow-collapse flip when the morph begins, so
- *     the glide is uninterrupted from pixel 1. The page keeps its own scroll
- *     room in flow (see pages/index.vue .hero-scroll-spacer), so the document
- *     never shrinks.
- *   - Easing is `easeOutCubic` — it responds immediately to the first px of
- *     scroll (no dead-zone slow start) and decelerates smoothly into the dock.
- *   - The text block AND the socials row are both translated by the same
- *     `slack/2`, so the whole left-aligned column glides from viewport-centre
- *     to the top-left as one unit (fixes the socials "snap-left" glitch).
+ * Rev 4 — text-only transform, content scrolls in after the dock:
+ *   - The hero shell is ALWAYS `position: fixed` (top:0 left:0, width:100%)
+ *     on desktop, from the first rAF tick, and stays full-viewport and
+ *     TRANSPARENT for the whole morph — it never shrinks, so there is no
+ *     white box collapsing beside the content.
+ *   - Only the text block (`.hero-name`) and the socials row (`.hero-socials`)
+ *     translate as one unit from viewport-centre to the docked position,
+ *     gliding on `easeOutCubic`.
+ *   - The page content (`.timeline-column`) is held below the fold purely in
+ *     CSS (`margin-top: 200dvh` at ≥768px in pages/index.vue): it cannot be
+ *     seen during the morph and, once the dock completes, it scrolls up from
+ *     the bottom of the viewport like normal page content — no JS opacity gate.
  *   - `prefers-reduced-motion` and viewports < `minViewportWidth` fall back to
  *     the natural CSS state (relative, centered, full-width).
  */
@@ -56,14 +57,12 @@ export function useHeroMorph(
   };
 
   const resetToNatural = (el: HTMLElement) => {
-    el.style.position = "relative";
+    el.style.position = "";
     el.style.left = "";
     el.style.top = "";
-    el.style.width = "100%";
+    el.style.width = "";
     el.style.height = "";
-    el.style.transform = "";
     el.style.transformOrigin = "";
-    el.style.padding = "";
     el.style.alignItems = "";
     el.style.justifyContent = "";
     const l1 = el.querySelector<HTMLElement>(".hero-line-1");
@@ -85,24 +84,13 @@ export function useHeroMorph(
 
     const vw = window.innerWidth;
 
-    // Fixed from the very first frame — no flow-collapse flip mid-morph.
+    // Fixed full-viewport shell — never shrinks, never moves. The transparent
+    // background for the index state is applied by Hero.vue, not here.
     el.style.position = "fixed";
     el.style.left = "0";
     el.style.top = "0";
+    el.style.width = "100%";
     el.style.height = "100dvh";
-    el.style.transformOrigin = "top left";
-
-    // Hero box: width lerps 100% -> 38%
-    const widthPct = lerp(100, 38, t);
-    el.style.width = `${widthPct}%`;
-
-    // Padding lerps (2rem symmetric) -> (3rem flex-start docked)
-    const padLR = lerp(2, 3, t);
-    const padTB = lerp(2, 3, t);
-    el.style.padding = `${padTB}rem ${padLR}rem`;
-
-    // Always anchor inner text to the left; fake horizontal centering at t=0
-    // via translateX on the name + socials as one unit.
     el.style.alignItems = "flex-start";
     el.style.justifyContent = "center";
 
@@ -114,16 +102,16 @@ export function useHeroMorph(
     const soc = el.querySelector<HTMLElement>(".hero-socials");
     if (name) {
       const textWidth = name.offsetWidth;
-      const heroW0 = vw; // hero width at t=0 (100%)
-      const heroW1 = 0.38 * vw; // hero width at t=1 (38%)
-      const padL0 = 2 * 16; // 2rem padding at t=0
-      // At t=0 the name is centred inside the hero's *content* box (hero width
-      // minus padding), so it is exactly viewport-centred regardless of the
-      // measured text width. At t=1 it sits at the docked offset (heroW1 slack).
-      // Both share the same current text width, so the glide is continuous.
-      const slackAt0 = Math.max(heroW0 - 2 * padL0 - textWidth, 0);
-      const slackAt1 = Math.max(heroW1 - textWidth, 0);
-      const tx = lerp(slackAt0, slackAt1, t) / 2;
+      const heroW0 = vw; // anchor at t=0: the full viewport
+      const heroW1 = 0.38 * vw; // anchor at t=1: the docked 38% region
+      const padL = 2 * 16; // constant 2rem shell padding
+      // t=0: name centred in the viewport content box — exactly viewport-centred
+      // regardless of the measured text width. t=1: name at the docked offset,
+      // the same spot the old 38% box ended up at (+16px because the shell
+      // padding stays 2rem instead of lerping to 3rem). The glide is continuous.
+      const tx0 = Math.max(heroW0 - 2 * padL - textWidth, 0) / 2;
+      const tx1 = Math.max(heroW1 - textWidth, 0) / 2 + 16;
+      const tx = lerp(tx0, tx1, t);
       name.style.transform = `translateX(${tx}px)`;
       if (soc) soc.style.transform = `translateX(${tx}px)`;
     }

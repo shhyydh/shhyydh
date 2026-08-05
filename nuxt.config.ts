@@ -7,7 +7,20 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxt/content",
+    "@nuxt/icon",
   ],
+
+  icon: {
+    provider: "none",
+    clientBundle: {
+      icons: [
+        "simple-icons:github",
+        "simple-icons:linkedin",
+        "simple-icons:substack",
+        "mdi:email",
+      ],
+    },
+  },
 
   css: [
     "~/assets/css/main.css",
