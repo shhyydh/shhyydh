@@ -7,6 +7,10 @@
         <h2 class="intro-heading">Myself</h2>
         <p class="intro">{{ intro }}</p>
         <Timeline :groups="groups" />
+        <div class="end-note">
+          <p class="end-meta">last updated on Aug 2026</p>
+          <p class="end-hook">still growing — new things land here on a regular pace</p>
+        </div>
       </div>
       <div class="footer-spacer" />
     </section>
@@ -132,9 +136,9 @@ const groups: TimelineGroup[] = [
 }
 
 .timeline-column {
-  /* Slightly translucent so the fixed HexBackground clusters show through faintly
-     while the content scrolls over them (the "floating over one background" feel). */
-  background: rgba(243, 248, 249, 0.9);
+  /* Fully transparent — no surface at all, so the fixed HexPattern clusters are
+     never covered: the content reads as text moving directly over the pattern. */
+  background: transparent;
   padding: 6rem 1.5rem 8rem;
   /* edge-fade mask always active (invisible above content area, harmless if
      content fills the column) — mirrors faraz's signature mask effect */
@@ -198,6 +202,29 @@ const groups: TimelineGroup[] = [
 }
 
 .footer-spacer {
-  height: 30vh;
+  height: 12vh;
+}
+
+/* End-of-content note (part of the scrolling column, NOT a separate footer
+   section): the last-updated date + a "still growing" hook. The docked hero
+   hint reads "stop scrolling :)" by the time the user reaches this point. */
+.end-note {
+  margin-top: 8rem;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+.end-note p {
+  margin: 0;
+}
+.end-meta {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.75);
+}
+.end-hook {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.55);
 }
 </style>

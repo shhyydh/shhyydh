@@ -1,5 +1,5 @@
 <template>
-  <HexBackground />
+  <HexPattern />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>

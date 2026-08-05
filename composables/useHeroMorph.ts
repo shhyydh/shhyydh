@@ -38,12 +38,16 @@ export function useHeroMorph(
 
   let raf = 0;
   let lastT = -1;
+  let lastLabel = "scroll :)";
+  let typeTimer: ReturnType<typeof setInterval> | null = null;
+  let endNoteTop = NaN;
   let textBlock: HTMLElement | null = null;
   let ro: ResizeObserver | null = null;
 
   // Force a recompute on the next tick (viewport/font metrics changed).
   const invalidate = () => {
     lastT = -1;
+    endNoteTop = NaN;
   };
 
   // The text width drives the centering translateX; re-measure whenever the
@@ -54,6 +58,28 @@ export function useHeroMorph(
     if (!target) return;
     ro = new ResizeObserver(invalidate);
     ro.observe(target);
+  };
+
+  const stopTyping = () => {
+    if (typeTimer) {
+      clearInterval(typeTimer);
+      typeTimer = null;
+    }
+  };
+
+  // Typewriter: clear the hint then reveal the new label one character at a time.
+  // Fast (35ms/char) so the label swap feels snappy rather than instant.
+  const typeLabel = (el: HTMLElement, label: string) => {
+    stopTyping();
+    const scrollHint = el.querySelector<HTMLElement>(".hero-scroll");
+    if (!scrollHint) return;
+    scrollHint.textContent = "";
+    let i = 0;
+    typeTimer = setInterval(() => {
+      i++;
+      scrollHint.textContent = label.slice(0, i);
+      if (i >= label.length) stopTyping();
+    }, 35);
   };
 
   const resetToNatural = (el: HTMLElement) => {
@@ -79,10 +105,11 @@ export function useHeroMorph(
     }
     const scroll = el.querySelector<HTMLElement>(".hero-scroll");
     if (scroll) {
+      stopTyping();
       scroll.style.transform = "";
-      scroll.style.fontSize = "";
-      scroll.style.opacity = "";
+      scroll.textContent = "scroll :)";
     }
+    lastLabel = "scroll :)";
   };
 
   const apply = (el: HTMLElement, t: number) => {
@@ -122,6 +149,8 @@ export function useHeroMorph(
       const tx = lerp(tx0, tx1, t);
       name.style.transform = `translateX(${tx}px)`;
       if (soc) soc.style.transform = `translateX(${tx}px)`;
+      // "scroll :)" rides the block purely for alignment (no fade, no shrink,
+      // no bounce). Its TEXT changes with page progress — see tick() below.
       if (scroll) scroll.style.transform = `translateX(${tx}px)`;
     }
 
@@ -147,14 +176,6 @@ export function useHeroMorph(
     // Solid icons shrink with the text so the whole block feels like one unit:
     // font-size on the socials row drives the (1em-based) iconify spans.
     if (soc) soc.style.fontSize = `${lerp(38, 30, t)}px`;
-
-    // "scroll :)" hint — rides with the text block, shrinks slightly, and fades
-    // away entirely by the time the dock completes (the hint's job is done once
-    // the content below is in view; it returns when scrolled back to the top).
-    if (scroll) {
-      scroll.style.fontSize = `${lerp(1.05, 0.9, t)}rem`;
-      scroll.style.opacity = `${1 - t}`;
-    }
   };
 
   const tick = () => {
@@ -183,6 +204,34 @@ export function useHeroMorph(
     const raw = clamp((scrollY - startY) / (end - startY), 0, 1);
     const t = easeOutCubic(raw);
     apply(el, t);
+
+    // Scroll-hint label transforms as the user moves through the page,
+    // typed out with a fast typewriter animation:
+    //   hero (before the dock)  → "scroll :)"
+    //   docked, in the timeline → "scroll slow :)"
+    //   final viewport of scroll → "stop scrolling :)"
+    const scroller = document.scrollingElement || document.documentElement;
+    const maxScroll = Math.max(0, scroller.scrollHeight - window.innerHeight);
+    let label = "scroll :)";
+    if (scrollY >= end) label = "scroll slow :)";
+    // "stop scrolling :)" only as the end-of-content note enters the viewport —
+    // the old threshold (last full viewport) fired ~600px too early.
+    if (maxScroll > 0) {
+      if (Number.isNaN(endNoteTop)) {
+        const note = document.querySelector(".end-note");
+        endNoteTop = note
+          ? note.getBoundingClientRect().top + window.scrollY
+          : NaN;
+      }
+      const stopY = Number.isNaN(endNoteTop)
+        ? maxScroll - Math.max(240, Math.round(window.innerHeight * 0.3))
+        : endNoteTop - window.innerHeight * 0.95;
+      if (scrollY >= Math.min(Math.max(stopY, end), maxScroll)) label = "stop scrolling :)";
+    }
+    if (label !== lastLabel) {
+      lastLabel = label;
+      typeLabel(el, label);
+    }
   };
 
   onMounted(() => {
@@ -195,6 +244,7 @@ export function useHeroMorph(
 
   onBeforeUnmount(() => {
     cancelAnimationFrame(raf);
+    stopTyping();
     window.removeEventListener("resize", invalidate);
     if (ro) ro.disconnect();
     ro = null;
