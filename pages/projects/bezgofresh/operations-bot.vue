@@ -216,8 +216,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   margin: 0 auto;
 }
 
-/* ---------- header ---------- */
-
 .case-brand {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -242,8 +240,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   color: rgba(0, 0, 0, 0.7);
   margin: 0;
 }
-
-/* ---------- meta ---------- */
 
 .case-meta {
   display: grid;
@@ -280,8 +276,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   }
 }
 
-/* ---------- sections ---------- */
-
 .case-section {
   margin-top: 8rem;
 }
@@ -307,8 +301,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   color: var(--color-accent);
   margin: 0 0 1rem;
 }
-
-/* ---------- challenge / solution duo ---------- */
 
 .case-duo {
   margin-top: 8rem;
@@ -353,8 +345,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
     margin-top: 2rem;
   }
 }
-
-/* ---------- under the hood ---------- */
 
 .case-hood-title {
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
@@ -425,8 +415,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   color: var(--color-accent);
 }
 
-/* ---------- CTA ---------- */
-
 .case-cta {
   margin-top: 10rem;
   padding: 5rem 0;
@@ -459,8 +447,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   color: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
 }
-
-/* ---------- value ---------- */
 
 .case-value-title {
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
@@ -496,8 +482,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
   border-radius: 999px;
   padding: 0.55rem 1.1rem;
 }
-
-/* ---------- next nav ---------- */
 
 .case-next {
   margin-top: 9rem;
@@ -539,8 +523,6 @@ const chips = ["24/7 Order Processing", "Automated Invoicing", "Unified Operatio
     justify-content: space-between;
   }
 }
-
-/* ---------- scroll reveal ---------- */
 
 [data-reveal] {
   opacity: 0;

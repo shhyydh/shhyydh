@@ -430,8 +430,6 @@ const results = [
   }
 }
 
-/* ---------- blog content ---------- */
-
 .post-lead {
   font-size: clamp(1.15rem, 2.4vw, 1.45rem);
   font-weight: 500;
@@ -566,8 +564,6 @@ const results = [
   color: rgba(0, 0, 0, 0.9);
 }
 
-/* ---------- CTA ---------- */
-
 .case-cta {
   margin-top: 10rem;
   padding: 5rem 0;
@@ -615,8 +611,6 @@ const results = [
   border-color: var(--color-accent-hover);
 }
 
-/* ---------- next nav ---------- */
-
 .case-next {
   margin-top: 9rem;
   display: flex;
@@ -657,8 +651,6 @@ const results = [
     justify-content: space-between;
   }
 }
-
-/* ---------- scroll reveal ---------- */
 
 [data-reveal] {
   opacity: 0;

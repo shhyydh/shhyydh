@@ -149,8 +149,8 @@ const onBack = () => emit("back");
   pointer-events: auto;
 }
 .hero-back:hover {
-  background-color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
   color: #fff;
 }
 .hero-shell[data-state="sidebar"] .hero-back svg {
