@@ -76,8 +76,49 @@
   }
 }
 
-::view-transition-old(hero),
-::view-transition-new(hero) {
-  animation-duration: 0.5s;
-  animation-timing-function: var(--ease-dock);
+/* ---------- view transitions ----------
+   The hero is registered under two names depending on its state:
+     hero-home    — the home page's big centered hero text (Hero.vue state="index")
+     hero-sidebar — the slim floating rail on project pages (state="sidebar")
+   Home <-> project navigation plays the site's 3-state dock morph:
+     home → project : the big hero text docks (scales) down into the rail slot,
+                      the rail fades in over it.
+     project → home : the rail fades out and the hero text grows back out from
+                      the rail slot to full-size centred.
+   Everything else (project ↔ project, other routes) keeps the browser's
+   default root crossfade = a plain, calm fade. */
+
+/* Home hero: shrink toward the back-button point in the rail (top-left). */
+::view-transition-old(hero-home) {
+  transform-origin: 24px 64px;
+  animation: vt-hero-dock-out 0.55s var(--ease-dock) both;
+}
+::view-transition-new(hero-home) {
+  transform-origin: 24px 64px;
+  animation: vt-hero-dock-in 0.55s var(--ease-dock) both;
+}
+
+/* Rail: a quiet fade — it is already small and in place. */
+::view-transition-old(hero-sidebar) {
+  animation: vt-hero-rail-out 0.3s ease both;
+}
+::view-transition-new(hero-sidebar) {
+  animation: vt-hero-rail-in 0.35s var(--ease-dock) both;
+}
+
+@keyframes vt-hero-dock-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.06); }
+}
+@keyframes vt-hero-dock-in {
+  from { opacity: 0; transform: scale(0.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes vt-hero-rail-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes vt-hero-rail-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

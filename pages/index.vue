@@ -53,7 +53,7 @@ const intro =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
 // Curated from content/mainpagecontent.md (lightly copy-edited). Entries with a
-// `project` slug link to /projects/:slug — the case-study pages (polish later).
+// `project` slug link to /projects/:slug — the case-study pages.
 const groups: TimelineGroup[] = [
   {
     year: "Getting here",
@@ -84,13 +84,13 @@ const groups: TimelineGroup[] = [
             title: "Operations bot",
             summary:
               "The entire operation ran over WhatsApp, so we built one custom solution for menu generation, order management, data management, billing, invoice generation and payment links — pushing the operations team from 10 to 50+ orders a day.",
-            project: "bezgofresh/operationsbotcontent",
+            project: "bezgofresh/operations-bot",
           },
           {
             title: "Vendor Communication System",
             summary:
               "Instead of calling vendors for every order, we gave them a complete solution to receive orders, update menus and see their day-to-day sales and analytics — cutting the daily hassle, miscommunication and spreadsheet juggling.",
-            project: "bezgofresh/vcscontent",
+            project: "bezgofresh/vcs",
           },
         ],
       },
@@ -108,19 +108,19 @@ const groups: TimelineGroup[] = [
         title: "Footwear management suite",
         summary:
           "A complete offline desktop application for small and medium footwear shops — billing, inventory, label design & printing, daily checkouts and analytics.",
-        project: "footwearcontent",
+        project: "footwear-suite",
       },
       {
         title: "Travel Agency suite",
         summary:
           "A desktop application for travel agencies to track customers, create invoices, track commissions, manage payments and analyse the service delivered so far.",
-        project: "travelsuitecontent",
+        project: "agency-suite",
       },
       {
         title: "AuthEngine",
         summary:
           "A self-hosted microservice that delivers login OTPs over WhatsApp — sub-second, zero-cost, with enterprise-grade auth.",
-        project: "authenginecontent",
+        project: "auth-engine",
       },
     ],
   },
@@ -133,6 +133,11 @@ const groups: TimelineGroup[] = [
   /* The home hero is always position:fixed on desktop (see useHeroMorph), so it
      needs no in-flow slot; this min-height just guarantees a stable first viewport. */
   min-height: 100dvh;
+  /* Consistent dock grid: name sits at the gutter, then a gap, the spine, a
+     gap, then the content. --dock-name-width is set by useHeroMorph from the
+     measured hero-name width, so all three line up exactly. */
+  --dock-gutter: 6rem;
+  --dock-gap: 3rem;
 }
 
 .timeline-column {
@@ -156,8 +161,11 @@ const groups: TimelineGroup[] = [
 
 @media (min-width: 768px) {
   .timeline-column {
-    /* 38% docked hero + 2rem gap (the "2-point" gap next to the docked hero) */
-    padding: 6rem 3rem 8rem calc(38% + 2rem);
+    /* Content clears the docked hero name and spine with an equal --dock-gap on
+       both sides: name | gap | spine | gap | content, with the content column's
+       right padding matching the left gutter so page margins stay aligned. */
+    padding: 6rem 6rem 8rem
+      calc(var(--dock-gutter) + var(--dock-gap) + var(--dock-name-width, 20rem) + var(--dock-gap));
     /* Hold the column below the fold until the dock transform (one viewport of
        scroll) has finished; only then does it scroll up from the bottom like
        normal page content. */
@@ -175,7 +183,7 @@ const groups: TimelineGroup[] = [
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -5rem;
+  left: calc(-1 * var(--dock-gap));
   width: 5px;
   background: rgba(0, 0, 0, 0.6);
 }

@@ -47,9 +47,6 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: ["/"],
-      // Case-study markdown still has template CTAs (/contact, /portfolio) that aren't
-      // real pages yet — suppress crawl errors until the case-study phase cleans them.
-      ignore: ["/contact", "/portfolio"],
     },
   },
 

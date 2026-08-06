@@ -3,7 +3,7 @@
     ref="el"
     class="hero-shell"
     :data-state="state"
-    style="view-transition-name: hero"
+    :style="{ viewTransitionName: state === 'sidebar' ? 'hero-sidebar' : 'hero-home' }"
   >
     <NuxtLink
       to="/"
@@ -114,34 +114,49 @@ const onBack = () => emit("back");
 
 /* state 2 — slim vertical navbar. Used on /projects/:slug routes.
    Injected by the parent via :state="sidebar".
-   The useHeroMorph composable doesn't touch this state. */
+   The useHeroMorph composable doesn't touch this state.
+   No border rail — the rail floats transparent over the HexPattern; the pages
+   offset their content by 60px (48px rail + 12px breathing strip). */
 .hero-shell[data-state="sidebar"] {
   position: fixed;
   top: 0; left: 0;
-  width: 88px;
+  width: 48px;
   height: 100dvh;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 0;
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .hero-back {
   opacity: 0;
   pointer-events: none;
   color: var(--color-ink);
-  transition: opacity 0.4s var(--ease-dock) 0.1s, transform 0.4s var(--ease-dock) 0.1s;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  /* Calm, colour-only interaction — no scale, no translate, no ring. */
+  transition: opacity 0.35s ease, background-color 0.3s ease, color 0.3s ease;
   order: -1;
-  transform: translateY(-4px) scale(0.8);
 }
 .hero-shell[data-state="sidebar"] .hero-back {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0) scale(1);
 }
-.hero-back:hover { color: var(--color-accent-hover); }
+.hero-back:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+.hero-shell[data-state="sidebar"] .hero-back svg {
+  width: 22px;
+  height: 22px;
+}
 
 .hero-name {
   display: flex;
@@ -163,8 +178,10 @@ const onBack = () => emit("back");
 }
 
 .hero-shell[data-state="sidebar"] .hero-name {
+  /* Third state: the name shrinks toward the side and fades off; the socials
+     re-orient from a horizontal row into a tighter vertical stack below. */
   opacity: 0;
-  transform: translateX(-30px);
+  transform: translateX(-24px) scale(0.94);
   pointer-events: none;
   transition: opacity 0.45s var(--ease-dock), transform 0.5s var(--ease-dock);
 }
@@ -201,7 +218,16 @@ const onBack = () => emit("back");
 .hero-socials :deep(a):hover { color: var(--color-accent-hover); }
 .hero-shell[data-state="sidebar"] .hero-socials {
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
+  font-size: 22px;
+}
+.hero-shell[data-state="sidebar"] .hero-socials a {
+  color: var(--color-accent-hover);
+  /* Soft white halo so the icons lift off the transparent rail / HexPattern. */
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85));
+}
+.hero-shell[data-state="sidebar"] .hero-socials a:hover {
+  color: var(--color-ink);
 }
 
 /* mobile — hero always in natural relative centered state, no morph */
@@ -233,6 +259,7 @@ const onBack = () => emit("back");
   .hero-shell[data-state="sidebar"] .hero-socials {
     flex-direction: row !important;
     gap: 1.5rem !important;
+    font-size: 38px !important;
   }
   .hero-line-1 { font-size: clamp(3rem, 14vw, 5rem) !important; }
   .hero-line-2 { font-size: clamp(1.75rem, 8vw, 3rem) !important; }

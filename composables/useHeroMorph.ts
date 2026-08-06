@@ -24,6 +24,15 @@ const clamp = (v: number, lo: number, hi: number) =>
   Math.min(Math.max(v, lo), hi);
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
+// Docked layout is a consistent grid on the home page:
+//   name (left edge at --dock-gutter) | gap | spine | gap | timeline content
+// The page gutter is shared with the content column's right padding, so the
+// left and right margins align, and the two gaps are identical (both
+// --dock-gap). The name width is measured and published to CSS as
+// --dock-name-width so the spine/content track it exactly.
+const DOCK_GUTTER = 6 * 16; // 6rem — matches .timeline-column right padding
+const DOCK_GAP = 3 * 16; // 3rem — matches --dock-gap in pages/index.vue
+
 export interface HeroMorphOptions {
   startY?: number;
   endY?: number;
@@ -138,17 +147,24 @@ export function useHeroMorph(
     if (name) {
       const textWidth = name.offsetWidth;
       const heroW0 = vw; // anchor at t=0: the full viewport
-      const heroW1 = 0.38 * vw; // anchor at t=1: the docked 38% region
       const padL = 2 * 16; // constant 2rem shell padding
       // t=0: name centred in the viewport content box — exactly viewport-centred
-      // regardless of the measured text width. t=1: name at the docked offset,
-      // the same spot the old 38% box ended up at (+16px because the shell
-      // padding stays 2rem instead of lerping to 3rem). The glide is continuous.
+      // regardless of the measured text width. t=1: name docked at the shared
+      // page gutter (DOCK_GUTTER) minus the shell's own padding, so its left
+      // edge lines up with the content column's right margin. The glide is
+      // continuous between the two.
       const tx0 = Math.max(heroW0 - 2 * padL - textWidth, 0) / 2;
-      const tx1 = Math.max(heroW1 - textWidth, 0) / 2 + 16;
+      const tx1 = DOCK_GUTTER - padL;
       const tx = lerp(tx0, tx1, t);
       name.style.transform = `translateX(${tx}px)`;
       if (soc) soc.style.transform = `translateX(${tx}px)`;
+      // Publish the measured width so .timeline-column can align its left
+      // padding and the spine to the docked name (content is below the fold
+      // during the morph, so the late-set value is never visible mid-glide).
+      document.documentElement.style.setProperty(
+        "--dock-name-width",
+        `${textWidth}px`
+      );
       // "scroll :)" rides the block purely for alignment (no fade, no shrink,
       // no bounce). Its TEXT changes with page progress — see tick() below.
       if (scroll) scroll.style.transform = `translateX(${tx}px)`;
