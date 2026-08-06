@@ -17,25 +17,27 @@
       </svg>
     </NuxtLink>
 
-    <div class="hero-name">
-      <div class="hero-line-1">Hi.</div>
-      <div class="hero-line-2">I'm Shahid</div>
+    <div class="hero-block">
+      <div class="hero-name">
+        <div class="hero-line-1">Hi.</div>
+        <div class="hero-line-2">I'm Shahid</div>
+      </div>
+
+      <nav class="hero-socials" aria-label="Social links">
+        <a
+          v-for="s in socials"
+          :key="s.label"
+          :href="s.href"
+          :target="s.href.startsWith('http') ? '_blank' : undefined"
+          rel="noreferrer"
+          :aria-label="s.label"
+        >
+          <Icon :name="s.icon" />
+        </a>
+      </nav>
+
+      <div class="hero-scroll" aria-hidden="true">scroll :)</div>
     </div>
-
-    <nav class="hero-socials" aria-label="Social links">
-      <a
-        v-for="s in socials"
-        :key="s.label"
-        :href="s.href"
-        :target="s.href.startsWith('http') ? '_blank' : undefined"
-        rel="noreferrer"
-        :aria-label="s.label"
-      >
-        <Icon :name="s.icon" />
-      </a>
-    </nav>
-
-    <div class="hero-scroll" aria-hidden="true">scroll :)</div>
   </aside>
 </template>
 
@@ -127,6 +129,14 @@ const onBack = () => emit("back");
   opacity: 1;
   pointer-events: auto;
 }
+/* desktop only — lift the floating home button off the rail's left edge */
+@media (min-width: 768px) {
+  .hero-shell[data-state="sidebar"] .hero-back {
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+  }
+}
 .hero-back:hover {
   background-color: var(--color-ink);
   border-color: var(--color-ink);
@@ -135,6 +145,13 @@ const onBack = () => emit("back");
 .hero-shell[data-state="sidebar"] .hero-back svg {
   width: 22px;
   height: 22px;
+}
+
+.hero-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .hero-name {
@@ -163,6 +180,10 @@ const onBack = () => emit("back");
   transform: translateX(-24px) scale(0.94);
   pointer-events: none;
   transition: opacity 0.45s var(--ease-dock), transform 0.5s var(--ease-dock);
+}
+.hero-shell[data-state="sidebar"] .hero-block {
+  align-items: center;
+  gap: 1rem;
 }
 
 /* "scroll :)" hint under the social icons — no animation, no fade, no shrink on the
@@ -237,6 +258,10 @@ const onBack = () => emit("back");
     flex-direction: row !important;
     gap: 1.25rem !important;
     font-size: 24px !important;
+  }
+  .hero-shell .hero-block {
+    align-items: center !important;
+    gap: 1.5rem !important;
   }
 
   .hero-shell[data-state="sidebar"] {

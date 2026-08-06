@@ -13,16 +13,12 @@
           <Icon :name="s.icon" />
         </a>
       </nav>
-      <p class="site-email">
-        <a :href="`mailto:${email}`">{{ email }}</a>
-      </p>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
 const socials = useSocials();
-const email = "reachoutshahid@proton.me";
 </script>
 
 <style scoped>
@@ -52,30 +48,11 @@ const email = "reachoutshahid@proton.me";
 .site-socials a:hover {
   color: var(--color-accent-hover);
 }
-.site-email {
-  margin: 1.25rem 0 0;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  color: rgba(0, 0, 0, 0.6);
-}
-.site-email a {
-  color: var(--color-accent);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(30, 64, 175, 0.4);
-  padding-bottom: 0.1rem;
-  transition: color 0.3s ease, border-color 0.3s ease;
-}
-.site-email a:hover {
-  color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
-}
 
 @media (min-width: 768px) {
-  body:has(.hero-shell[data-state="sidebar"]) .site-footer {
-    margin-left: 60px;
-    width: calc(100% - 60px);
-    box-sizing: border-box;
+  /* desktop keeps its socials in the sidebar rail — footer is mobile-only */
+  .site-footer {
+    display: none;
   }
 }
 </style>

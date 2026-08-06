@@ -56,6 +56,19 @@ export function useTimelineReveal(scrollSelector = "[data-timeline-scroll]") {
   };
 
   onMounted(() => {
+    // mobile: every scroll frame rewrites inline opacity/transform on ALL
+    // timeline items (a per-item lerp towards the viewport centre), which on
+    // phones shows up as a stuck/docking stutter. Fall back to a native,
+    // plain scroll — the items are simply always visible.
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      document
+        .querySelectorAll<HTMLElement>("[data-timeline-item]")
+        .forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "";
+        });
+      return;
+    }
     bindContainers();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });

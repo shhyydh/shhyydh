@@ -29,12 +29,12 @@
       </p>
       <div
         v-if="entry.metrics?.length"
-        class="mt-5 space-y-3"
+        class="mt-5 space-y-3 timeline-metrics"
       >
         <span
           v-for="m in entry.metrics"
           :key="m"
-          class="flex items-baseline gap-1.5"
+          class="flex items-baseline gap-1.5 timeline-metric"
         >
           <span class="text-xl md:text-2xl font-extrabold text-accent">
             {{ m.split(" ")[0] }}
@@ -91,3 +91,24 @@ defineProps<{
   dense?: boolean;
 }>();
 </script>
+
+<style scoped>
+@media (max-width: 767px) {
+  /* centre the 2024 bezgoFresh metric rows on mobile only; desktop stays
+     left-aligned with the text */
+  .timeline-metrics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .timeline-metric {
+    justify-content: center;
+  }
+  /* a real 60fps rAF scroll pass + `will-change` on every entry fights each
+     other on phones — keep the layer promotion off so scrolling stays native */
+  .group {
+    will-change: auto;
+  }
+}
+</style>

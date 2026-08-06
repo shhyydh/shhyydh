@@ -50,6 +50,17 @@
   .will-change-transform {
     will-change: transform;
   }
+  /* mobile: edge-fade masks cost a full-element layer + mask repaint on every
+     scroll frame — the fixed-height mask on tall content is the most likely
+     cause of the "stuck/docking" scroll feel on phones. Turn it off so the
+     page scrolls natively. Desktop keeps the signature mask effect. */
+  @media (max-width: 767px) {
+    .case-main,
+    .timeline-column {
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+    }
+  }
   .mask-fade-y {
     -webkit-mask-image: linear-gradient(
       to bottom,

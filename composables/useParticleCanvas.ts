@@ -42,6 +42,10 @@ export function useParticleCanvas(canvasRef: Ref<HTMLCanvasElement | null>) {
   onMounted(() => {
     const canvas = canvasRef.value;
     if (!canvas) return;
+    // mobile: the fixed full-viewport canvas redraws at 60fps forever; that
+    // steady GPU/CPU load is part of the scroll stutter on phones. Skip it on
+    // small/touch screens — the particles are decorative.
+    if (window.matchMedia("(max-width: 767px)").matches) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 

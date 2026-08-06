@@ -8,9 +8,9 @@ import { onMounted, onBeforeUnmount, type Ref } from "vue";
  *     on desktop, from the first rAF tick, and stays full-viewport and
  *     TRANSPARENT for the whole morph — it never shrinks, so there is no
  *     white box collapsing beside the content.
- *   - Only the text block (`.hero-name`) and the socials row (`.hero-socials`)
- *     translate as one unit from viewport-centre to the docked position,
- *     gliding on `easeOutCubic`.
+ *   - Only the text block (`.hero-block` — name, socials and scroll hint) moves
+ *     as one unit from viewport-centre to the docked position, gliding on
+ *     `easeOutCubic`.
  *   - The page content (`.timeline-column`) is held below the fold purely in
  *     CSS (`margin-top: 200dvh` at ≥768px in pages/index.vue): it cannot be
  *     seen during the morph and, once the dock completes, it scrolls up from
@@ -104,18 +104,16 @@ export function useHeroMorph(
     const l2 = el.querySelector<HTMLElement>(".hero-line-2");
     if (l1) l1.style.fontSize = "";
     if (l2) l2.style.fontSize = "";
-    const name = el.querySelector<HTMLElement>(".hero-name");
+    const block = el.querySelector<HTMLElement>(".hero-block");
     const soc = el.querySelector<HTMLElement>(".hero-socials");
-    if (name) name.style.transform = "";
+    if (block) block.style.transform = "";
     if (soc) {
-      soc.style.transform = "";
       soc.style.gap = "";
       soc.style.fontSize = "";
     }
     const scroll = el.querySelector<HTMLElement>(".hero-scroll");
     if (scroll) {
       stopTyping();
-      scroll.style.transform = "";
       scroll.textContent = "scroll :)";
     }
     lastLabel = "scroll :)";
@@ -138,26 +136,28 @@ export function useHeroMorph(
     el.style.justifyContent = "center";
 
     if (!textBlock) {
-      textBlock = el.querySelector(".hero-name") as HTMLElement | null;
+      textBlock = el.querySelector(".hero-block") as HTMLElement | null;
     }
 
-    const name = textBlock;
+    const block = textBlock;
+    const name = el.querySelector<HTMLElement>(".hero-name");
     const soc = el.querySelector<HTMLElement>(".hero-socials");
-    const scroll = el.querySelector<HTMLElement>(".hero-scroll");
-    if (name) {
+    if (block && name) {
+      const blockWidth = block.offsetWidth;
       const textWidth = name.offsetWidth;
       const heroW0 = vw; // anchor at t=0: the full viewport
       const padL = 2 * 16; // constant 2rem shell padding
-      // t=0: name centred in the viewport content box — exactly viewport-centred
-      // regardless of the measured text width. t=1: name docked at the shared
-      // page gutter (DOCK_GUTTER) minus the shell's own padding, so its left
-      // edge lines up with the content column's right margin. The glide is
-      // continuous between the two.
-      const tx0 = Math.max(heroW0 - 2 * padL - textWidth, 0) / 2;
+      // t=0: the text block (name + socials + scroll hint, riding as ONE unit)
+      // centred in the viewport content box — exactly viewport-centred regardless
+      // of measured width. t=1: docked at the shared page gutter (DOCK_GUTTER)
+      // minus the shell's own padding, so its left edge lines up with the content
+      // column's right margin. The glide is continuous between the two. Because
+      // the socials and hint travel inside the block, they never flash between a
+      // centred and a left-aligned position.
+      const tx0 = Math.max(heroW0 - 2 * padL - blockWidth, 0) / 2;
       const tx1 = DOCK_GUTTER - padL;
       const tx = lerp(tx0, tx1, t);
-      name.style.transform = `translateX(${tx}px)`;
-      if (soc) soc.style.transform = `translateX(${tx}px)`;
+      block.style.transform = `translateX(${tx}px)`;
       // Publish the measured width so .timeline-column can align its left
       // padding and the spine to the docked name (content is below the fold
       // during the morph, so the late-set value is never visible mid-glide).
@@ -165,9 +165,6 @@ export function useHeroMorph(
         "--dock-name-width",
         `${textWidth}px`
       );
-      // "scroll :)" rides the block purely for alignment (no fade, no shrink,
-      // no bounce). Its TEXT changes with page progress — see tick() below.
-      if (scroll) scroll.style.transform = `translateX(${tx}px)`;
     }
 
     // Font-size lerp for the two hero lines
