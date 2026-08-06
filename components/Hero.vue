@@ -51,28 +51,7 @@ const el = ref<HTMLElement | null>(null);
 // expose ref so parent (pages/index.vue) can pass it to useHeroMorph
 defineExpose({ el });
 
-const socials = [
-  {
-    label: "GitHub",
-    href: "https://github.com/shhyydh",
-    icon: "simple-icons:github",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/shhyydh",
-    icon: "simple-icons:linkedin",
-  },
-  {
-    label: "Substack",
-    href: "https://shhyydh.substack.com",
-    icon: "simple-icons:substack",
-  },
-  {
-    label: "Email",
-    href: "mailto:reachoutshahid@proton.me",
-    icon: "mdi:email",
-  },
-];
+const socials = useSocials();
 
 const onBack = () => emit("back");
 </script>
@@ -230,15 +209,17 @@ const onBack = () => emit("back");
   color: var(--color-ink);
 }
 
-/* mobile — hero always in natural relative centered state, no morph */
+/* mobile — the home hero fills the first viewport with the centred name so the
+   timeline only appears on scroll; on project/startup pages the Hi/Shahid block
+   collapses so the page opens on its own title hero, and the home button floats
+   top-left. Social icons are smaller than on desktop. */
 @media (max-width: 767px) {
-  .hero-shell,
-  .hero-shell[data-state="sidebar"] {
+  .hero-shell {
     position: relative !important;
     top: auto !important; left: auto !important;
     width: 100% !important;
     height: auto !important;
-    min-height: 70dvh;
+    min-height: 100dvh;
     transform: none !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -247,21 +228,40 @@ const onBack = () => emit("back");
     padding: 2rem 1.5rem !important;
     border-right: none !important;
   }
-  .hero-shell[data-state="sidebar"] .hero-name {
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
-  }
-  .hero-shell[data-state="sidebar"] .hero-back {
-    display: none !important;
-  }
-  .hero-shell .hero-socials,
-  .hero-shell[data-state="sidebar"] .hero-socials {
-    flex-direction: row !important;
-    gap: 1.5rem !important;
-    font-size: 38px !important;
-  }
   .hero-line-1 { font-size: clamp(3rem, 14vw, 5rem) !important; }
   .hero-line-2 { font-size: clamp(1.75rem, 8vw, 3rem) !important; }
+  .hero-shell .hero-scroll {
+    display: none !important;
+  }
+  .hero-shell .hero-socials {
+    flex-direction: row !important;
+    gap: 1.25rem !important;
+    font-size: 24px !important;
+  }
+
+  .hero-shell[data-state="sidebar"] {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
+  .hero-shell[data-state="sidebar"] .hero-name,
+  .hero-shell[data-state="sidebar"] .hero-scroll,
+  .hero-shell[data-state="sidebar"] .hero-socials {
+    display: none !important;
+  }
+  .hero-shell[data-state="sidebar"] .hero-back {
+    display: flex !important;
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
 }
 </style>
