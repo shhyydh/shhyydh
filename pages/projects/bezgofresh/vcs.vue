@@ -88,12 +88,12 @@
         </section>
 
         <section class="case-cta" data-reveal>
-          <p class="case-cta-line">wanna to built something like this?</p>
+          <p class="case-cta-line">Want to built something like this?</p>
           <a class="case-cta-btn" :href="`mailto:${contactEmail}`">reach out to me... →</a>
         </section>
 
         <section class="case-section" data-reveal>
-          <h2 class="case-value-title">The Value.</h2>
+          <h2 class="case-value-title">The Outcome.</h2>
           <p class="case-value">
             bezgoFresh went from Google Sheets to a live platform showing real-time vendor
             orders, coordinated multi-vendor responses, and unified regional menus — built

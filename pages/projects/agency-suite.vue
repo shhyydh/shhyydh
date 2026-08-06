@@ -106,7 +106,7 @@
         </section>
 
         <section class="case-section" data-reveal>
-          <h2 class="case-value-title">The Value.</h2>
+          <h2 class="case-value-title">The Outcome.</h2>
           <p class="case-value">
             Agency Suite went from a paper-based back office to a live, self-contained
             operations system — installed, branded and used by the agency with no cloud, no

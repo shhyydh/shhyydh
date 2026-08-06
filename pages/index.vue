@@ -63,7 +63,7 @@ const intro =
 // `project` slug link to /projects/:slug — the case-study pages.
 const groups: TimelineGroup[] = [
   {
-    year: "Rabbit holes I found",
+    year: "The rabbit holes I followed",
     entries: [
       {
         title: "I started with a pencil",

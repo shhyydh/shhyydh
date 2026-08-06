@@ -98,7 +98,7 @@
         </section>
 
         <section class="case-section" data-reveal>
-          <h2 class="case-value-title">The Value.</h2>
+          <h2 class="case-value-title">The Outcome.</h2>
           <p class="case-value">
             Went from manual WhatsApp juggling to a fully automated order-to-delivery
             workflow — menus regenerated on demand, invoices issued in seconds, and every

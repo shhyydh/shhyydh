@@ -97,12 +97,12 @@
         </section>
 
         <section class="case-cta" data-reveal>
-          <p class="case-cta-line">need to try it?</p>
-          <a class="case-cta-btn" :href="`mailto:${contactEmail}`">just give me an thought! →</a>
+          <p class="case-cta-line">Want to try it?</p>
+          <a class="case-cta-btn" :href="`mailto:${contactEmail}`">Just let me know! →</a>
         </section>
 
         <section class="case-section" data-reveal>
-          <h2 class="case-value-title">The Value.</h2>
+          <h2 class="case-value-title">The Outcome.</h2>
           <p class="case-value">
             AuthEngine went from a broken, manual SMS workflow to a live self-hosted
             service streaming OTPs over WhatsApp — paired, persisted, and shipped in 1
