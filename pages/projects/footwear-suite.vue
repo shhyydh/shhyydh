@@ -5,7 +5,7 @@
     <main class="case-main">
       <article class="case-article">
         <header class="case-header" data-reveal>
-          <p class="case-brand">Case Study</p>
+          <p class="case-brand">Build Log</p>
           <h1 class="case-title">Footwear Shop Management System</h1>
         </header>
 
@@ -29,11 +29,8 @@
 
         <section class="case-section case-overview" data-reveal>
           <p>
-            Small shops still run their business on Windows 7 machines and 80mm receipt
-            printers — while others are on modern x64 systems. I've engineered a single
-            offline-capable POS platform that prints barcode labels and invoices to real
-            thermal hardware, and ships to every machine in between, from a 2010 shop PC to
-            a 2025 laptop.
+            Many footwear shops still rely on decade-old Windows machines and thermal printers that newer software no longer supports.
+            Instead of asking businesses to replace their hardware, I built an offline-first desktop platform that works across generations—handling billing, inventory, barcode labels and receipts from a single codebase.
           </p>
         </section>
 
@@ -94,7 +91,7 @@
         </section>
 
         <section class="case-section" data-reveal>
-          <h2 class="case-value-title">The Value.</h2>
+          <h2 class="case-value-title">The Outcome.</h2>
           <p class="case-value">
             The shop went from paper ledgers to a live desktop platform handling billing,
             barcode labels, returns, supplier purchases, and daily analytics — with one
@@ -104,6 +101,8 @@
             <li v-for="chip in chips" :key="chip">{{ chip }}</li>
           </ul>
         </section>
+
+        <CaseLearned :lines="learned" />
 
         <nav class="case-next" data-reveal aria-label="Case study navigation">
           <NuxtLink to="/" class="case-next-back">← Back to timeline</NuxtLink>
@@ -134,9 +133,15 @@ useHead({
 
 const goHome = () => navigateTo("/");
 
-const contactEmail = "hello@shhyd.dev";
+const contactEmail = "reachoutshahid@proton.me";
 
 const next = { to: "/projects/agency-suite", title: "Agency Suite" };
+
+const learned = [
+  "This project taught me that good engineering isn't about using the newest technology.",
+  "It's about respecting the constraints people already live with.",
+  "The best solution isn't always the most modern one—it's the one people can adopt tomorrow.",
+];
 
 const features = [
   {

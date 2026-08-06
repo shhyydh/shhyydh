@@ -105,6 +105,8 @@
           </ul>
         </section>
 
+        <CaseLearned :lines="learned" />
+
         <nav class="case-next" data-reveal aria-label="Case study navigation">
           <NuxtLink to="/" class="case-next-back">← Back to timeline</NuxtLink>
           <NuxtLink :to="next.to" class="case-next-fwd">
@@ -134,9 +136,15 @@ useHead({
 
 const goHome = () => navigateTo("/");
 
-const contactEmail = "hello@shhyd.dev";
+const contactEmail = "reachoutshahid@proton.me";
 
 const next = { to: "/projects/bezgofresh/vcs", title: "The Vendor Control System" };
+
+const learned = [
+  "This project taught me that chaos is the best product spec.",
+  "Automation only earns trust one order at a time — the system works when the humans stop noticing it.",
+  "Every messy WhatsApp thread was a requirement I hadn't written down yet.",
+];
 
 const features = [
   {

@@ -113,6 +113,8 @@
           </ul>
         </section>
 
+        <CaseLearned :lines="learned" />
+
         <nav class="case-next" data-reveal aria-label="Case study navigation">
           <NuxtLink to="/" class="case-next-back">← Back to timeline</NuxtLink>
           <NuxtLink :to="next.to" class="case-next-fwd">
@@ -142,9 +144,15 @@ useHead({
 
 const goHome = () => navigateTo("/");
 
-const contactEmail = "hello@shhyd.dev";
+const contactEmail = "reachoutshahid@proton.me";
 
 const next = { to: "/projects/bezgofresh/operations-bot", title: "The Operations Engine" };
+
+const learned = [
+  "This project taught me that scope is a feature.",
+  "A week of focused scope out-ships a month of imagined requirements.",
+  "The right tool doesn't chase the newest channel — it meets the user where they already are.",
+];
 
 const features = [
   {

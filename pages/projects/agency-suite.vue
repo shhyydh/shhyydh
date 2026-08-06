@@ -117,6 +117,8 @@
           </ul>
         </section>
 
+        <CaseLearned :lines="learned" />
+
         <nav class="case-next" data-reveal aria-label="Case study navigation">
           <NuxtLink to="/" class="case-next-back">← Back to timeline</NuxtLink>
           <NuxtLink :to="next.to" class="case-next-fwd">
@@ -146,9 +148,15 @@ useHead({
 
 const goHome = () => navigateTo("/");
 
-const contactEmail = "hello@shhyd.dev";
+const contactEmail = "reachoutshahid@proton.me";
 
 const next = { to: "/projects/auth-engine", title: "AuthEngine" };
+
+const learned = [
+  "This project taught me that the best software disappears into the user's day.",
+  "No cloud, no subscriptions, no support calls — the product's job was to be forgettable in the best way.",
+  "Trust is earned by giving people ownership of their own data, not by promising them more features.",
+];
 
 const features = [
   {

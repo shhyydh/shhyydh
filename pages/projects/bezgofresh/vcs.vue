@@ -102,6 +102,8 @@
           </ul>
         </section>
 
+        <CaseLearned :lines="learned" />
+
         <nav class="case-next" data-reveal aria-label="Case study navigation">
           <NuxtLink to="/" class="case-next-back">← Back to timeline</NuxtLink>
           <NuxtLink :to="next.to" class="case-next-fwd">
@@ -131,9 +133,15 @@ useHead({
 
 const goHome = () => navigateTo("/");
 
-const contactEmail = "hello@shhyd.dev";
+const contactEmail = "reachoutshahid@proton.me";
 
 const next = { to: "/projects/footwear-suite", title: "Footwear Shop Management System" };
+
+const learned = [
+  "This project taught me that coordination is the hardest engineering problem.",
+  "Real-time isn't speed — it's waiting for every vendor before the world hears about the order.",
+  "A shared source of truth only holds when every zone has a reason to trust it.",
+];
 
 const features = [
   {
