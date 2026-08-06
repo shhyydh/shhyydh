@@ -4,7 +4,7 @@
 
     <section class="timeline-column">
       <div class="timeline-stack">
-        <h2 class="intro-heading">Myself</h2>
+        <h2 class="intro-heading">What drives me</h2>
         <p class="intro">{{ intro }}</p>
         <Timeline :groups="groups" />
         <div class="end-note">
@@ -43,32 +43,39 @@ type TimelineEntry = {
   title: string;
   summary: string;
   project?: string;
+  badge?: string;
+  metrics?: string[];
+  cta?: string;
+  ctaTo?: string;
   children?: TimelineEntry[];
 };
-type TimelineGroup = { year: string; entries: TimelineEntry[] };
+type TimelineGroup = {
+  year: string;
+  entries: TimelineEntry[];
+  sub?: { title: string; entries: TimelineEntry[] };
+};
 
-// Intro copy: lorem ipsum placeholder until the user supplies the final "Myself"
-// text. Keep it short (2-3 sentences) so it reads like faraz's intro.
+// The intro under "What drives me": what pulls me into building things.
 const intro =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+  "I don't enjoy learning technologies for the sake of learning them.\n\nI enjoy understanding how things work, why they break, and how they can be rebuilt into something simpler.\n\nEvery project I build starts with curiosity — not a framework. Whether it's automating operations, designing products, or exploring new tools, I'm always chasing the next thing that teaches me to think differently.";
 
 // Curated from content/mainpagecontent.md (lightly copy-edited). Entries with a
 // `project` slug link to /projects/:slug — the case-study pages.
 const groups: TimelineGroup[] = [
   {
-    year: "Getting here",
+    year: "Rabbit holes I found",
     entries: [
       {
-        title: "Drawing was the first love",
-        summary: "Still have the sketches I made.",
+        title: "I started with a pencil",
+        summary: "Long before I wrote code, I filled notebooks with sketches.",
       },
       {
-        title: "Dabbled in trading",
-        summary: "Learned the markets, lost some and gained some.",
+        title: "Curiosity found the markets",
+        summary: "Enough wins to stay interested.\nEnough losses to stay humble.",
       },
       {
-        title: "Learned to code",
-        summary: "Built things, didn't deploy them — until now.",
+        title: "Then I discovered software",
+        summary: "Suddenly every idea became buildable.",
       },
     ],
   },
@@ -76,53 +83,55 @@ const groups: TimelineGroup[] = [
     year: "2024",
     entries: [
       {
-        title: "bezgoFresh — the startup we built",
+        title: "Built my first real startup — bezgoFresh",
         summary:
-          "Started with a group of college mates: a cold-chain based last-mile delivery service that connects local vendors with customers online — easing shopping for customers while enabling multiple channels for vendors.",
-        children: [
-          {
-            title: "Operations bot",
-            summary:
-              "The entire operation ran over WhatsApp, so we built one custom solution for menu generation, order management, data management, billing, invoice generation and payment links — pushing the operations team from 10 to 50+ orders a day.",
-            project: "bezgofresh/operations-bot",
-          },
-          {
-            title: "Vendor Communication System",
-            summary:
-              "Instead of calling vendors for every order, we gave them a complete solution to receive orders, update menus and see their day-to-day sales and analytics — cutting the daily hassle, miscommunication and spreadsheet juggling.",
-            project: "bezgofresh/vcs",
-          },
-        ],
-      },
-      {
-        title: "100+ orders a day",
-        summary:
-          "Combining both solutions, bezgoFresh is now pushing 100+ orders per day.",
+          "Helping a traditional local business run like a modern software company. Built an operations platform that scaled a WhatsApp-first startup from manual workflows to 100+ daily orders.",
+        metrics: ["100+ Orders", "4 Internal Tools", "WhatsApp Automation"],
+        cta: "Read Case Study",
+        ctaTo: "/startup/bezgofresh",
       },
     ],
   },
   {
-    year: "Built to sell & repurpose",
+    year: "Things I've Built",
     entries: [
       {
-        title: "Footwear management suite",
+        title: "Operations bot",
         summary:
-          "A complete offline desktop application for small and medium footwear shops — billing, inventory, label design & printing, daily checkouts and analytics.",
-        project: "footwear-suite",
+          "A WhatsApp bot that runs a delivery business — orders, menus, billing and data management.",
+        project: "bezgofresh/operations-bot",
+        badge: "bezgoFresh",
       },
       {
-        title: "Travel Agency suite",
+        title: "Vendor Communication System",
         summary:
-          "A desktop application for travel agencies to track customers, create invoices, track commissions, manage payments and analyse the service delivered so far.",
-        project: "agency-suite",
+          "A vendor platform that handles orders, menus and daily sales for their day to day sales.",
+        project: "bezgofresh/vcs",
+        badge: "bezgoFresh",
       },
       {
         title: "AuthEngine",
-        summary:
-          "A self-hosted microservice that delivers login OTPs over WhatsApp — sub-second, zero-cost, with enterprise-grade auth.",
+        summary: "A self-hosted service that delivers login OTPs over WhatsApp.",
         project: "auth-engine",
       },
     ],
+    sub: {
+      title: "Built things that paid for",
+      entries: [
+        {
+          title: "Footwear management suite",
+          summary:
+            "A desktop application for footwear shops — billing, inventory, label printing and analytics.",
+          project: "footwear-suite",
+        },
+        {
+          title: "Travel Agency suite",
+          summary:
+            "A desktop application that runs a travel agency — customers, invoices, commissions and payments.",
+          project: "agency-suite",
+        },
+      ],
+    },
   },
 ];
 </script>
@@ -173,7 +182,7 @@ const groups: TimelineGroup[] = [
   }
 }
 
-/* The timeline spine: runs from the "Myself" heading all the way down the
+/* The timeline spine: runs from the "What drives me" heading all the way down the
    timeline (used to start only at the first group header inside Timeline.vue). */
 .timeline-stack {
   position: relative;
@@ -207,6 +216,7 @@ const groups: TimelineGroup[] = [
   line-height: 1.7;
   color: rgba(0, 0, 0, 0.8);
   margin: 0 0 5rem;
+  white-space: pre-line;
 }
 
 .footer-spacer {

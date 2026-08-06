@@ -9,59 +9,25 @@
           {{ group.year }}
         </h2>
         <div class="space-y-10">
-          <div
+          <TimelineEntry
             v-for="entry in group.entries"
             :key="entry.title"
+            :entry="entry"
+          />
+        </div>
+        <div v-if="group.sub" class="mt-12">
+          <h3
             data-timeline-item
-            class="group transition-all duration-300 ease-out will-change-transform"
+            class="text-lg md:text-2xl font-bold mb-6 tracking-tight pt-8 border-t border-black/10 text-black/80 transition-all duration-300 ease-out will-change-transform"
           >
-            <div>
-              <div
-                class="font-bold mb-2 font-sans"
-                :class="entry.children?.length ? 'text-2xl md:text-3xl' : 'text-lg md:text-2xl'"
-              >
-                <NuxtLink
-                  v-if="entry.project"
-                  :to="`/projects/${entry.project}`"
-                  class="text-accent underline decoration-accent/20 decoration-1 hover:text-accent-hover hover:decoration-accent-hover transition-all duration-500 ease-in-out"
-                >
-                  {{ entry.title }}
-                </NuxtLink>
-                <span v-else>{{ entry.title }}</span>
-              </div>
-              <p
-                class="text-base md:text-lg leading-relaxed whitespace-pre-line text-black/80"
-              >
-                {{ entry.summary }}
-              </p>
-              <div
-                v-if="entry.children?.length"
-                class="mt-5 space-y-5 pl-4 md:pl-6 border-l-2 border-black/10"
-              >
-                <div
-                  v-for="child in entry.children"
-                  :key="child.title"
-                  data-timeline-item
-                  class="transition-all duration-300 ease-out will-change-transform"
-                >
-                  <div class="text-base md:text-lg font-bold font-sans">
-                    <NuxtLink
-                      v-if="child.project"
-                      :to="`/projects/${child.project}`"
-                      class="text-accent underline decoration-accent/20 decoration-1 hover:text-accent-hover hover:decoration-accent-hover transition-all duration-500 ease-in-out"
-                    >
-                      {{ child.title }}
-                    </NuxtLink>
-                    <span v-else>{{ child.title }}</span>
-                  </div>
-                  <p
-                    class="text-sm md:text-base leading-relaxed whitespace-pre-line text-black/70"
-                  >
-                    {{ child.summary }}
-                  </p>
-                </div>
-              </div>
-            </div>
+            {{ group.sub.title }}
+          </h3>
+          <div class="space-y-10">
+            <TimelineEntry
+              v-for="entry in group.sub.entries"
+              :key="entry.title"
+              :entry="entry"
+            />
           </div>
         </div>
       </div>
@@ -81,7 +47,8 @@ withDefaults(
         entries: [
           {
             title: "Add your first milestone here",
-            summary: "Edit pages/index.vue to replace this placeholder timeline.\nUse the same structure as faraz's site: year headers + entries.",
+            summary:
+              "Edit pages/index.vue to replace this placeholder timeline.\nUse the same structure as faraz's site: year headers + entries.",
           },
         ],
       },
@@ -93,7 +60,15 @@ type TimelineEntry = {
   title: string;
   summary: string;
   project?: string;
+  badge?: string;
+  metrics?: string[];
+  cta?: string;
+  ctaTo?: string;
   children?: TimelineEntry[];
 };
-type TimelineGroup = { year: string; entries: TimelineEntry[] };
+type TimelineGroup = {
+  year: string;
+  entries: TimelineEntry[];
+  sub?: { title: string; entries: TimelineEntry[] };
+};
 </script>
