@@ -150,7 +150,9 @@ const onBack = () => emit("back");
 .hero-block {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* desktop (index): the socials sit left-aligned under the name's left edge,
+     like the original hero. Mobile and the sidebar rail re-centre them below. */
+  align-items: flex-start;
   gap: 1.5rem;
 }
 
@@ -251,9 +253,6 @@ const onBack = () => emit("back");
   }
   .hero-line-1 { font-size: clamp(3rem, 14vw, 5rem) !important; }
   .hero-line-2 { font-size: clamp(1.75rem, 8vw, 3rem) !important; }
-  .hero-shell .hero-scroll {
-    display: none !important;
-  }
   .hero-shell .hero-socials {
     flex-direction: row !important;
     gap: 1.25rem !important;
@@ -262,6 +261,11 @@ const onBack = () => emit("back");
   .hero-shell .hero-block {
     align-items: center !important;
     gap: 1.5rem !important;
+  }
+  /* the "scroll :)" hint rides below the socials on the mobile home hero too —
+     project pages still hide it via the sidebar rule below */
+  .hero-shell .hero-scroll {
+    font-size: 0.95rem;
   }
 
   .hero-shell[data-state="sidebar"] {

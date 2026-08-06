@@ -215,6 +215,19 @@ export function useHeroMorph(
 
     const end = endY ?? window.innerHeight;
     const raw = clamp((scrollY - startY) / (end - startY), 0, 1);
+    if (raw <= 0) {
+      // At rest (scrollY 0) leave the hero in its pure natural CSS state — no
+      // inline overrides at all. The t=0 morph styles are pixel-identical to
+      // that natural state anyway, so the dock engages invisibly on the first
+      // scroll frame. This is what kills the refresh "flash" where the hero
+      // paints in one configuration for a frame and then JS nudges it to the
+      // "real" one.
+      if (lastT !== 0) {
+        lastT = 0;
+        resetToNatural(el);
+      }
+      return;
+    }
     const t = easeOutCubic(raw);
     apply(el, t);
 
