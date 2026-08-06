@@ -259,7 +259,7 @@ const onBack = () => emit("back");
     font-size: 24px !important;
   }
   .hero-shell .hero-block {
-    align-items: center !important;
+    align-items: flex-start !important;
     gap: 1.5rem !important;
   }
   /* the "scroll :)" hint rides below the socials on the mobile home hero too —
