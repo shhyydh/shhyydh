@@ -6,7 +6,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
-    "@nuxt/content",
     "@nuxt/icon",
   ],
 
@@ -37,11 +36,6 @@ export default defineNuxtConfig({
     appManifest: false,
   },
 
-  content: {
-    documentDriven: false,
-    highlight: { theme: { default: "github-light" } },
-  },
-
   nitro: {
     preset: "cloudflare-pages",
     prerender: {
@@ -57,6 +51,7 @@ export default defineNuxtConfig({
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "description", content: "shhyd's portfolio: journey, projects, and contact." },
       ],
+      link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
       htmlAttrs: { lang: "en" },
     },
   },

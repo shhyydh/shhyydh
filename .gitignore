@@ -9,3 +9,4 @@ dist
 .wrangler
 *.md
 !README.md
+PROJECT_PLAN.md
