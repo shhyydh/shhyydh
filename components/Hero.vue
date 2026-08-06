@@ -130,14 +130,15 @@ const onBack = () => emit("back");
 .hero-back {
   opacity: 0;
   pointer-events: none;
-  color: var(--color-ink);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: 1px solid transparent;
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-accent);
   box-sizing: border-box;
   /* Calm, colour-only interaction — no scale, no translate, no ring. */
   transition: opacity 0.35s ease, background-color 0.3s ease, color 0.3s ease;
