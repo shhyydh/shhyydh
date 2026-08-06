@@ -8,9 +8,10 @@
           <p class="case-brand">bezgoFresh</p>
           <h1 class="case-title">The Operations Engine</h1>
           <p class="case-subtitle">
-            Meat &amp; fish delivery businesses ran entire operations over WhatsApp chat. I
-            have designed a single bot for all of it — orders, menus, billing, fleet
-            tracking, business insights.
+            bezgoFresh ran its entire delivery operation over WhatsApp chat — orders,
+            menus, billing and delivery assignments all lived in one stream. I built a
+            single bot to carry that work, so the team could focus on serving customers
+            instead of holding the operation together.
           </p>
         </header>
 
@@ -34,10 +35,11 @@
 
         <section class="case-section case-overview" data-reveal>
           <p>
-            Delivery businesses need more than a chatbot. I've conceptualized a
-            'conversation-to-operation' engine to build a fully automated WhatsApp
-            platform that turns a single message into a complete order-to-delivery
-            pipeline while keeping the business team hands-free.
+            The business worked — but only because people spent hours every day holding
+            it together. Every order passed through multiple hands, and each hand-off
+            created mistakes: wrong quantities, missed items, duplicate orders. I built a
+            'conversation-to-operation' engine that turns one WhatsApp message into a
+            complete order-to-delivery pipeline, so the system carries more of the work.
           </p>
         </section>
 
@@ -46,20 +48,22 @@
             <p class="case-kicker">The Challenge</p>
             <h2>The Bottleneck</h2>
             <p>
-              We had a really growing customer base but ran everything manually — orders
-              scattered across WhatsApp groups, prices typed into each message, billing
-              done by hand, deliveries tracked in a notebook. There was no central system
-              and every step was a source of errors, double-bookings, and wasted time.
+              Orders arrived through WhatsApp. Menus changed every morning. Vendors
+              updated prices manually. Operations teams copied orders into spreadsheets
+              and created invoices by hand. Delivery assignments happened over phone
+              calls. It worked — but only because people spent hours every day holding it
+              together, and every new order created more manual work.
             </p>
           </div>
           <div class="case-block">
             <p class="case-kicker">The Solution</p>
             <h2>The Reality</h2>
             <p>
-              I've built a 'living' operations engine, developed a unique fully automated
-              order workflow, greeting teams with real-time order parsing, dynamic menu
-              cards, automated Zoho invoicing, and live Google Sheets sync — turning
-              WhatsApp chaos into a streamlined business system.
+              Instead of asking people to work harder, I made the system carry more of
+              the work. The bot parses orders from real-time WhatsApp messages, regenerates
+              menu cards from live pricing, issues invoices and payment links
+              automatically, and syncs every order to fleet and operations dashboards —
+              turning WhatsApp chaos into a streamlined business system.
             </p>
           </div>
           <blockquote class="case-quote">

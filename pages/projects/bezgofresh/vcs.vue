@@ -8,9 +8,10 @@
           <p class="case-brand">bezgoFresh</p>
           <h1 class="case-title">The Vendor Control System</h1>
           <p class="case-subtitle">
-            A meat &amp; fish vendor network ran entirely on Google Sheets. No real-time
-            pipeline. We gave it one unified platform — orders, menus, and regional names
-            living together in a single, coordinated system.
+            bezgoFresh's vendors ran on phone calls and scattered Google Sheets — prices,
+            availability and regional names in different tabs, nothing real-time. We gave
+            them one coordinated platform for orders, menus and daily sales, without the
+            back-and-forth.
           </p>
         </header>
 
@@ -31,10 +32,10 @@
 
         <section class="case-section case-overview" data-reveal>
           <p>
-            Vendor networks need more than spreadsheets. We conceived a role-based SaaS
-            architecture — SUPER_USER, Hub Managers, and Vendors — to build a fully digital
-            order platform where every zone shares one source of truth while delivering
-            real-time order flow.
+            Behind every customer order sits a chain of hand-offs, and each one created
+            confusion — vendors waiting for phone calls, menus out of sync, orders
+            confirmed twice. We built a role-based platform where every zone shares one
+            source of truth, and preparation status stays synchronized with operations.
           </p>
         </section>
 
@@ -44,20 +45,21 @@
             <h2>The Bottleneck</h2>
             <p>
               The business coordinated dozens of vendors across multiple zones using
-              scattered Google Sheets — orders, prices, availability, and regional names
-              lived in different tabs. Nothing was real-time. Multi-vendor orders had no
-              coordinated response flow, and the existing process failed to scale with the
-              region's daily demand.
+              scattered Google Sheets — orders, prices, availability and regional names
+              lived in different tabs. Nothing was real-time. Vendors waited for phone
+              calls to know what to prepare, and multi-vendor orders had no coordinated
+              response flow. The process failed to scale with the region's daily demand.
             </p>
           </div>
           <div class="case-block">
             <p class="case-kicker">The Solution</p>
             <h2>The Reality</h2>
             <p>
-              We built a 'living' order platform. We engineered a real-time orchestration
-              layer, greeting vendors with live order streams and coordinated status
-              responses that dispatch externally only once every vendor has answered —
-              without losing the regional character of the local menus.
+              Instead of calling vendors for every order, we gave them the platform
+              itself. Menus can be updated digitally, orders arrive automatically, and
+              preparation status stays synchronized with operations. Orders dispatch
+              externally only once every vendor has answered — without losing the regional
+              character of the local menus.
             </p>
           </div>
           <blockquote class="case-quote">
