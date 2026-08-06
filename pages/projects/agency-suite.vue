@@ -136,7 +136,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "The Offline Business Operating System — shhyd",
+  title: "The Offline Business Operating System — shhyydh",
   meta: [
     {
       name: "description",

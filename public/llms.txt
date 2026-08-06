@@ -1,0 +1,24 @@
+# shhyydh
+
+> Portfolio of shhyydh (Shahid) — the journey, the projects, and how to get in touch.
+
+## What this site is
+
+A personal portfolio telling the story of how I went from sketching ideas to building
+production software — starting with the bezgoFresh startup, then a set of tools and
+systems built for businesses.
+
+## Projects
+
+- [Operations Engine](/projects/bezgofresh/operations-bot): The automation bot that took bezgoFresh from manual WhatsApp juggling to a fully automated order-to-delivery workflow.
+- [Vendor Control System](/projects/bezgofresh/vcs): The system that replaced bezgoFresh's phone-call-and-Spreadsheet vendor network with a live, real-time platform.
+- [bezoFresh case study](/startup/bezgofresh): The full story of building bezgoFresh from idea to operating platform.
+- [AuthEngine](/projects/auth-engine): A self-hosted service that delivers login OTPs over WhatsApp, replacing a broken manual SMS workflow.
+- [Footwear management suite](/projects/footwear-suite): An operations suite for a footwear business.
+- [Travel Agency suite](/projects/agency-suite): A live, self-contained operations system for a travel agency.
+
+## Contact
+
+- GitHub: https://github.com/shhyydh
+- LinkedIn: https://www.linkedin.com/in/shhyydh
+- Substack: https://shhyydh.substack.com

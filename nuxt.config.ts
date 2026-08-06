@@ -7,7 +7,12 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxt/icon",
+    "@nuxtjs/sitemap",
   ],
+
+  site: {
+    url: "https://shhyydh.pages.dev",
+  },
 
   icon: {
     provider: "none",
@@ -40,16 +45,16 @@ export default defineNuxtConfig({
     preset: "cloudflare-pages",
     prerender: {
       crawlLinks: true,
-      routes: ["/"],
+      routes: ["/", "/sitemap.xml"],
     },
   },
 
   app: {
     head: {
-      title: "shhyd",
+      title: "shhyydh's Portfolio",
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { name: "description", content: "shhyd's portfolio: journey, projects, and contact." },
+        { name: "description", content: "shhyydh's portfolio: journey, projects, and contact." },
       ],
       link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
       htmlAttrs: { lang: "en" },

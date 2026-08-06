@@ -121,7 +121,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "Footwear Shop Management System — shhyd",
+  title: "Footwear Shop Management System — shhyydh",
   meta: [
     {
       name: "description",

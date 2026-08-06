@@ -132,7 +132,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "The OTP Engine — shhyd",
+  title: "The OTP Engine — shhyydh",
   meta: [
     {
       name: "description",

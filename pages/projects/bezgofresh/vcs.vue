@@ -123,7 +123,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "The Vendor Control System — shhyd",
+  title: "The Vendor Control System — shhyydh",
   meta: [
     {
       name: "description",

@@ -128,7 +128,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "The Operations Engine — shhyd",
+  title: "The Operations Engine — shhyydh",
   meta: [
     {
       name: "description",

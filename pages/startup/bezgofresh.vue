@@ -249,7 +249,7 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 useScrollReveal();
 
 useHead({
-  title: "How bezgoFresh became an operations platform — shhyd",
+  title: "How bezgoFresh became an operations platform — shhyydh",
   meta: [
     {
       name: "description",
