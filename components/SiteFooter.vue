@@ -1,6 +1,9 @@
 <template>
   <footer class="site-footer">
     <div class="site-footer-inner">
+      <nav class="site-links" aria-label="Site links">
+        <NuxtLink to="/blog" class="site-link">Blog</NuxtLink>
+      </nav>
       <nav class="site-socials" aria-label="Contact links">
         <a
           v-for="s in socials"
@@ -31,6 +34,26 @@ const socials = useSocials();
   max-width: 68rem;
   margin: 0 auto;
   text-align: center;
+}
+.site-links {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.site-link {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 0.25rem;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.site-link:hover {
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 .site-socials {
   display: flex;

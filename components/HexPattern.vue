@@ -146,7 +146,7 @@ const clusterStyle = (c: PreparedCluster) => ({
   transform: `translate(-50%, -50%) rotate(${c.rotation}deg)`,
   "--hp-cell": `${c.cell}px`,
   ...(c.mask ? { "--hp-mask": c.mask } : {}),
-} as Record<string, string>);
+} as Record<string, string | number>);
 
 const hexStyle = (c: PreparedCluster, h: PreparedHex) => ({
   left: `${c.width / 2 + h.dx}px`,

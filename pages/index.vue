@@ -7,6 +7,11 @@
         <h2 class="intro-heading">What drives me</h2>
         <p class="intro">{{ intro }}</p>
         <Timeline :groups="groups" />
+        <section class="writings">
+          <p class="writings-kicker">My writings</p>
+          <p class="writings-line">I'm documenting the learnings in here.</p>
+          <NuxtLink to="/blog" class="writings-link">Read my writings →</NuxtLink>
+        </section>
         <div class="end-note">
           <p class="end-meta">last updated on Aug 2026</p>
           <p class="end-hook">still growing — new things land here on a regular pace</p>
@@ -221,6 +226,47 @@ const groups: TimelineGroup[] = [
 
 .footer-spacer {
   height: 12vh;
+}
+
+.writings {
+  margin-top: 8rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.writings-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 1rem;
+}
+
+.writings-line {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+}
+
+.writings-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 0.25rem;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+.writings-link:hover {
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 /* End-of-content note (part of the scrolling column, NOT a separate footer

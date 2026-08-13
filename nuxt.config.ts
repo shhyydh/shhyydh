@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/icon",
     "@nuxtjs/sitemap",
+    "@nuxt/content",
   ],
 
   site: {
@@ -45,7 +46,7 @@ export default defineNuxtConfig({
     preset: "cloudflare-pages",
     prerender: {
       crawlLinks: true,
-      routes: ["/", "/sitemap.xml"],
+      routes: ["/", "/blog", "/sitemap.xml"],
     },
   },
 

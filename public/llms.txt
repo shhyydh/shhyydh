@@ -17,6 +17,10 @@ systems built for businesses.
 - [Footwear management suite](/projects/footwear-suite): An operations suite for a footwear business.
 - [Travel Agency suite](/projects/agency-suite): A live, self-contained operations system for a travel agency.
 
+## Writing
+
+- [Building BezgoFresh — Chapter 01](/blog/building-bezgofresh-part-01): Before BezgoFresh Was a Startup — five college students, a stack of flyers, and the moment an idea started becoming a business.
+
 ## Contact
 
 - GitHub: https://github.com/shhyydh
