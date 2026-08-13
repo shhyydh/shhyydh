@@ -39,9 +39,22 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useScrollReveal } from "~/composables/useScrollReveal";
+import { useProseReveal } from "~/composables/useProseReveal";
 
 useScrollReveal();
+useProseReveal();
+
+// Reloads restore the browser's previous scroll position (often mid-article);
+// the page should start at the title. Client-side navigations and back/forward
+// keep Nuxt's default scroll behavior.
+onMounted(() => {
+  const nav = performance.getEntriesByType("navigation")[0] as
+    | PerformanceNavigationTiming
+    | undefined;
+  if (nav?.type === "reload") window.scrollTo(0, 0);
+});
 
 const route = useRoute();
 const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug;
@@ -207,6 +220,15 @@ const goHome = () => navigateTo("/");
   transition-delay: var(--reveal-delay, 0s);
 }
 [data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+:deep(.prose-reveal) {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-dock), transform 0.7s var(--ease-dock);
+}
+:deep(.prose-reveal.is-in) {
   opacity: 1;
   transform: translateY(0);
 }
