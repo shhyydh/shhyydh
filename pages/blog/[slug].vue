@@ -18,7 +18,7 @@
           </p>
         </header>
 
-        <div class="blog-prose" data-reveal>
+        <div class="blog-prose">
           <ContentRenderer :value="post as any" />
         </div>
 
