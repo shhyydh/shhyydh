@@ -3,11 +3,11 @@ import { onMounted, onBeforeUnmount, type Ref } from "vue";
 /**
  * Continuous scroll-linked hero morph — vanilla JS, no animation library.
  *
- * Rev 4 — text-only transform, content scrolls in after the dock:
- *   - The hero shell is ALWAYS `position: fixed` (top:0 left:0, width:100%)
- *     on desktop, from the first rAF tick, and stays full-viewport and
- *     TRANSPARENT for the whole morph — it never shrinks, so there is no
- *     white box collapsing beside the content.
+ * Rev 5 — text-only transform, content scrolls in after the dock:
+ *   - The hero shell is `position: fixed` (top:0 left:0, width:100%) on
+ *     desktop in CSS (Hero.vue), including at rest. It stays full-viewport and
+ *     TRANSPARENT for the whole morph, and because it never enters the page
+ *     flow, the page height doesn't jump when the morph engages.
  *   - Only the text block (`.hero-block` — name, socials and scroll hint) moves
  *     as one unit from viewport-centre to the docked position, gliding on
  *     `easeOutCubic`.
@@ -15,8 +15,11 @@ import { onMounted, onBeforeUnmount, type Ref } from "vue";
  *     CSS (`margin-top: 200dvh` at ≥768px in pages/index.vue): it cannot be
  *     seen during the morph and, once the dock completes, it scrolls up from
  *     the bottom of the viewport like normal page content — no JS opacity gate.
+ *   - Work happens only on scroll/resize (one rAF per event burst), not in a
+ *     perpetual loop. Each tick does all layout reads before any style writes,
+ *     and centring uses a % translate, so there's no forced layout per frame.
  *   - `prefers-reduced-motion` and viewports < `minViewportWidth` fall back to
- *     the natural CSS state (relative, centered, full-width).
+ *     the natural CSS state (relative, centered, full-width, in page flow).
  */
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -28,7 +31,7 @@ const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 //   name (left edge at --dock-gutter) | gap | spine | gap | timeline content
 // The page gutter is shared with the content column's right padding, so the
 // left and right margins align, and the two gaps are identical (both
-// --dock-gap). The name width is measured and published to CSS as
+// --dock-gap). The docked name width is measured and published to CSS as
 // --dock-name-width so the spine/content track it exactly.
 const DOCK_GUTTER = 6 * 16; // 6rem — matches .timeline-column right padding
 const DOCK_GAP = 3 * 16; // 3rem — matches --dock-gap in pages/index.vue
@@ -50,24 +53,8 @@ export function useHeroMorph(
   let lastLabel = "scroll :)";
   let typeTimer: ReturnType<typeof setInterval> | null = null;
   let endNoteTop = NaN;
-  let textBlock: HTMLElement | null = null;
-  let ro: ResizeObserver | null = null;
-
-  // Force a recompute on the next tick (viewport/font metrics changed).
-  const invalidate = () => {
-    lastT = -1;
-    endNoteTop = NaN;
-  };
-
-  // The text width drives the centering translateX; re-measure whenever the
-  // block resizes (web-font load, window resize, devicePixelRatio change, …).
-  const ensureObserver = (el: HTMLElement) => {
-    if (ro || typeof ResizeObserver === "undefined") return;
-    const target = el.querySelector(".hero-name");
-    if (!target) return;
-    ro = new ResizeObserver(invalidate);
-    ro.observe(target);
-  };
+  let dockNameWidth = "";
+  let reduceMotion: MediaQueryList | null = null;
 
   const stopTyping = () => {
     if (typeTimer) {
@@ -119,11 +106,11 @@ export function useHeroMorph(
     lastLabel = "scroll :)";
   };
 
-  const apply = (el: HTMLElement, t: number) => {
+  // vw: viewport width incl. scrollbar (what CSS `vw` uses, for the font clamps).
+  // shellW: the fixed shell's width, excl. a classic scrollbar (for centring).
+  const apply = (el: HTMLElement, t: number, vw: number, shellW: number) => {
     if (t === lastT) return;
     lastT = t;
-
-    const vw = window.innerWidth;
 
     // Fixed full-viewport shell — never shrinks, never moves. The transparent
     // background for the index state is applied by Hero.vue, not here.
@@ -135,40 +122,23 @@ export function useHeroMorph(
     el.style.alignItems = "flex-start";
     el.style.justifyContent = "center";
 
-    if (!textBlock) {
-      textBlock = el.querySelector(".hero-block") as HTMLElement | null;
-    }
-
-    const block = textBlock;
-    const name = el.querySelector<HTMLElement>(".hero-name");
-    const soc = el.querySelector<HTMLElement>(".hero-socials");
-    if (block && name) {
-      const blockWidth = block.offsetWidth;
-      const textWidth = name.offsetWidth;
-      const heroW0 = vw; // anchor at t=0: the full viewport
-      const padL = 2 * 16; // constant 2rem shell padding
+    const padL = 2 * 16; // constant 2rem shell padding
+    const block = el.querySelector<HTMLElement>(".hero-block");
+    if (block) {
       // t=0: the text block (name + socials + scroll hint, riding as ONE unit)
-      // centred in the viewport content box — exactly viewport-centred regardless
-      // of measured width. t=1: docked at the shared page gutter (DOCK_GUTTER)
-      // minus the shell's own padding, so its left edge lines up with the content
-      // column's right margin. The glide is continuous between the two. Because
-      // the socials and hint travel inside the block, they never flash between a
-      // centred and a left-aligned position.
-      const tx0 = Math.max(heroW0 - 2 * padL - blockWidth, 0) / 2;
-      const tx1 = DOCK_GUTTER - padL;
-      const tx = lerp(tx0, tx1, t);
-      block.style.transform = `translateX(${tx}px)`;
-      // Publish the measured width so .timeline-column can align its left
-      // padding and the spine to the docked name (content is below the fold
-      // during the morph, so the late-set value is never visible mid-glide).
-      document.documentElement.style.setProperty(
-        "--dock-name-width",
-        `${textWidth}px`
-      );
+      // centred in the shell — shift to the shell centre, then back by half the
+      // block's own width (the % term), so no width measurement is needed.
+      // t=1: docked at the shared page gutter, so its left edge lines up with the
+      // content column's right margin. The glide is continuous between the two.
+      const tx = lerp(shellW / 2 - padL, DOCK_GUTTER - padL, t);
+      block.style.transform = `translateX(${tx}px) translateX(${-50 * (1 - t)}%)`;
     }
 
-    // Font-size lerp for the two hero lines
-    const vwScale = vw / 100;
+    // Font-size lerp for the two hero lines. Mirrors Hero.vue's
+    // clamp(3.5rem, 12vw, 11rem) etc., so vwScale is 1vw expressed in rem — in
+    // px it always hit the max clamp, and on viewports under ~1470px the text
+    // jumped in size on the first scrolled pixel.
+    const vwScale = vw / 100 / 16;
     const minBig1 = 3.5, maxBig1 = 11;
     const minSmall1 = 2.5, maxSmall1 = 6;
     const big1 = clamp(12 * vwScale, minBig1, maxBig1);
@@ -184,22 +154,34 @@ export function useHeroMorph(
     if (l2) l2.style.fontSize = `${lerp(big2, small2, t)}rem`;
 
     // Socials gap lerps to tighter when docked
+    const soc = el.querySelector<HTMLElement>(".hero-socials");
     if (soc) soc.style.gap = `${lerp(2, 1.5, t)}rem`;
 
     // Solid icons shrink with the text so the whole block feels like one unit:
     // font-size on the socials row drives the (1em-based) iconify spans.
     if (soc) soc.style.fontSize = `${lerp(38, 30, t)}px`;
+
+    // Publish the DOCKED name width so .timeline-column can align its left
+    // padding and the spine to it. Only at t=1 and only when it changes: a
+    // custom property on :root restyles the whole page, so writing it every
+    // morph frame was a big part of the scroll jank. Content is below the fold
+    // until the dock completes, so it never sees the pre-dock fallback.
+    if (t === 1) {
+      const name = el.querySelector<HTMLElement>(".hero-name");
+      const w = name ? `${name.offsetWidth}px` : "";
+      if (w && w !== dockNameWidth) {
+        dockNameWidth = w;
+        document.documentElement.style.setProperty("--dock-name-width", w);
+      }
+    }
   };
 
   const tick = () => {
-    raf = requestAnimationFrame(tick);
+    raf = 0;
     const el = heroRef.value;
     if (!el) return;
-    ensureObserver(el);
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    if (window.innerWidth < minViewportWidth) {
+    if (reduceMotion?.matches || window.innerWidth < minViewportWidth) {
       if (lastT !== 0) {
         lastT = 0;
         resetToNatural(el);
@@ -207,11 +189,16 @@ export function useHeroMorph(
       return;
     }
 
-    let scrollY = window.scrollY;
-    try {
-      const lenis = (window as any).__lenis;
-      if (lenis && typeof lenis.scroll === "number") scrollY = lenis.scroll;
-    } catch (_) {}
+    // Layout reads first — nothing below reads layout after the style writes.
+    const scrollY = window.scrollY;
+    const vw = window.innerWidth;
+    const shellW = document.documentElement.clientWidth;
+    const scroller = document.scrollingElement || document.documentElement;
+    const maxScroll = Math.max(0, scroller.scrollHeight - window.innerHeight);
+    if (Number.isNaN(endNoteTop)) {
+      const note = document.querySelector(".end-note");
+      endNoteTop = note ? note.getBoundingClientRect().top + scrollY : NaN;
+    }
 
     const end = endY ?? window.innerHeight;
     const raw = clamp((scrollY - startY) / (end - startY), 0, 1);
@@ -219,36 +206,25 @@ export function useHeroMorph(
       // At rest (scrollY 0) leave the hero in its pure natural CSS state — no
       // inline overrides at all. The t=0 morph styles are pixel-identical to
       // that natural state anyway, so the dock engages invisibly on the first
-      // scroll frame. This is what kills the refresh "flash" where the hero
-      // paints in one configuration for a frame and then JS nudges it to the
-      // "real" one.
+      // scroll frame.
       if (lastT !== 0) {
         lastT = 0;
         resetToNatural(el);
       }
       return;
     }
-    const t = easeOutCubic(raw);
-    apply(el, t);
+    apply(el, easeOutCubic(raw), vw, shellW);
 
     // Scroll-hint label transforms as the user moves through the page,
     // typed out with a fast typewriter animation:
     //   hero (before the dock)  → "scroll :)"
     //   docked, in the timeline → "scroll slow :)"
     //   final viewport of scroll → "stop scrolling :)"
-    const scroller = document.scrollingElement || document.documentElement;
-    const maxScroll = Math.max(0, scroller.scrollHeight - window.innerHeight);
     let label = "scroll :)";
     if (scrollY >= end) label = "scroll slow :)";
     // "stop scrolling :)" only as the end-of-content note enters the viewport —
     // the old threshold (last full viewport) fired ~600px too early.
     if (maxScroll > 0) {
-      if (Number.isNaN(endNoteTop)) {
-        const note = document.querySelector(".end-note");
-        endNoteTop = note
-          ? note.getBoundingClientRect().top + window.scrollY
-          : NaN;
-      }
       const stopY = Number.isNaN(endNoteTop)
         ? maxScroll - Math.max(240, Math.round(window.innerHeight * 0.3))
         : endNoteTop - window.innerHeight * 0.95;
@@ -260,20 +236,35 @@ export function useHeroMorph(
     }
   };
 
+  // One tick per frame at most, and only when something changed.
+  const schedule = () => {
+    if (!raf) raf = requestAnimationFrame(tick);
+  };
+
+  // Force a full recompute (viewport/font metrics changed).
+  const invalidate = () => {
+    lastT = -1;
+    endNoteTop = NaN;
+    schedule();
+  };
+
   onMounted(() => {
-    raf = requestAnimationFrame(tick);
+    reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reduceMotion.addEventListener?.("change", invalidate);
+    window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", invalidate, { passive: true });
     if (typeof document !== "undefined" && document.fonts) {
       document.fonts.ready.then(invalidate).catch(() => {});
     }
+    schedule();
   });
 
   onBeforeUnmount(() => {
     cancelAnimationFrame(raf);
+    raf = 0;
     stopTyping();
+    window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", invalidate);
-    if (ro) ro.disconnect();
-    ro = null;
-    textBlock = null;
+    reduceMotion?.removeEventListener?.("change", invalidate);
   });
 }

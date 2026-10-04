@@ -4,7 +4,7 @@
       <div v-for="group in groups" :key="group.year">
         <h2
           data-timeline-item
-          class="text-3xl md:text-6xl font-extrabold mb-8 tracking-tight transition-all duration-300 ease-out will-change-transform"
+          class="text-3xl md:text-6xl font-extrabold mb-8 tracking-tight will-change-transform"
         >
           {{ group.year }}
         </h2>
@@ -18,7 +18,7 @@
         <div v-if="group.sub" class="mt-12">
           <h3
             data-timeline-item
-            class="text-lg md:text-2xl font-bold mb-6 tracking-tight pt-8 border-t border-black/10 text-black/80 transition-all duration-300 ease-out will-change-transform"
+            class="text-lg md:text-2xl font-bold mb-6 tracking-tight pt-8 border-t border-black/10 text-black/80 will-change-transform"
           >
             {{ group.sub.title }}
           </h3>

@@ -55,8 +55,7 @@
      cause of the "stuck/docking" scroll feel on phones. Turn it off so the
      page scrolls natively. Desktop keeps the signature mask effect. */
   @media (max-width: 767px) {
-    .case-main,
-    .timeline-column {
+    .case-main {
       -webkit-mask-image: none !important;
       mask-image: none !important;
     }

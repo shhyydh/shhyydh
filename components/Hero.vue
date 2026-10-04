@@ -91,6 +91,17 @@ const onBack = () => emit("back");
 .hero-shell[data-state="index"] .hero-socials {
   pointer-events: auto;
 }
+/* Desktop with motion: fixed from the very first paint, same as during the
+   morph. If it sat in the page flow at rest, the page would shrink by a whole
+   viewport on the first scrolled pixel. Reduced motion keeps the in-flow hero
+   (no morph, pages/index.vue drops its 200dvh hold too). */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .hero-shell[data-state="index"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
 
 /* state 2 — slim vertical navbar. Used on /projects/:slug routes.
    Injected by the parent via :state="sidebar".

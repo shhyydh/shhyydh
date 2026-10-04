@@ -159,18 +159,9 @@ const groups: TimelineGroup[] = [
      never covered: the content reads as text moving directly over the pattern. */
   background: transparent;
   padding: 6rem 1.5rem 8rem;
-  /* edge-fade mask always active (invisible above content area, harmless if
-     content fills the column) — mirrors faraz's signature mask effect */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0, transparent 26px, black 38px,
-    black calc(100% - 38px), transparent calc(100% - 26px), transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0, transparent 26px, black 38px,
-    black calc(100% - 38px), transparent calc(100% - 26px), transparent 100%
-  );
+  /* No edge-fade mask here: it only covered the column's own top/bottom
+     padding, so it was invisible, yet it forced the whole (very tall) column
+     into a masked layer that repainted on every scroll frame. */
 }
 
 @media (min-width: 768px) {
@@ -180,9 +171,14 @@ const groups: TimelineGroup[] = [
        right padding matching the left gutter so page margins stay aligned. */
     padding: 6rem 6rem 8rem
       calc(var(--dock-gutter) + var(--dock-gap) + var(--dock-name-width, 20rem) + var(--dock-gap));
+  }
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .timeline-column {
     /* Hold the column below the fold until the dock transform (one viewport of
        scroll) has finished; only then does it scroll up from the bottom like
-       normal page content. */
+       normal page content. With reduced motion there's no dock, so no hold —
+       otherwise that's two empty viewports between the hero and the content. */
     margin-top: 200dvh;
   }
 }

@@ -4,21 +4,8 @@ export function useTimelineReveal(scrollSelector = "[data-timeline-scroll]") {
   let ticking = false;
   let containers: HTMLElement[] = [];
 
-  const updateItem = (el: HTMLElement) => {
-    const rect = el.getBoundingClientRect();
+  const updateItem = (el: HTMLElement, rect: DOMRect) => {
     const vh = window.innerHeight;
-
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      const center = (rect.top + rect.bottom) / 2;
-      const denom = vh * 0.75 || 1;
-      const t = Math.min(Math.max(Math.abs(center - vh / 2) / denom, 0), 1);
-      const opacity = String(1 - t);
-      const ty = t * 20;
-      el.style.opacity = opacity;
-      el.style.transform = `translateY(${ty}px)`;
-      return;
-    }
-
     const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
     if (visible <= 0) {
       el.style.opacity = "0";
@@ -32,11 +19,15 @@ export function useTimelineReveal(scrollSelector = "[data-timeline-scroll]") {
     el.style.transform = `translateY(${ty}px)`;
   };
 
+  // Measure every item first, then write: interleaving a rect read with a style
+  // write per item forced a style recalc for each item on every scroll frame.
   const updateAll = () => {
     ticking = false;
-    document
-      .querySelectorAll<HTMLElement>("[data-timeline-item]")
-      .forEach(updateItem);
+    const items = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-timeline-item]")
+    );
+    const rects = items.map((el) => el.getBoundingClientRect());
+    items.forEach((el, i) => updateItem(el, rects[i]));
   };
 
   const onScroll = () => {

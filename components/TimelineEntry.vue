@@ -1,5 +1,5 @@
 <template>
-  <div data-timeline-item class="group transition-all duration-300 ease-out will-change-transform">
+  <div data-timeline-item class="group will-change-transform">
     <div>
       <div
         class="font-bold mb-2 font-sans"
