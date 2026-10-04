@@ -40,6 +40,11 @@ useHeroMorph(heroElRef, { startY: 0, endY: undefined });
 
 useTimelineReveal();
 
+usePageSeo({
+  title: "shhyydh's Portfolio",
+  description: "shhyydh's portfolio: journey, projects, and contact.",
+});
+
 const goHome = () => {
   if (import.meta.client) window.scrollTo({ top: 0, behavior: "smooth" });
 };

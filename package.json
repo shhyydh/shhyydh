@@ -9,6 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
+    "check": "nuxt typecheck && nuxt build",
     "deploy": "npm ci && npm run build && wrangler pages deploy dist"
   },
   "dependencies": {

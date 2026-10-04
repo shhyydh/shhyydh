@@ -95,13 +95,10 @@ const next = computed(() =>
 const words = computed(() => countWords(post.value?.body ?? null));
 const readTime = computed(() => Math.max(1, Math.round(words.value / 220)));
 
-useHead({
+usePageSeo({
   title: `${post.value.title} — shhyydh`,
-  meta: [
-    { name: "description", content: post.value.description },
-    { property: "og:title", content: post.value.title },
-    { property: "og:description", content: post.value.description },
-  ],
+  description: post.value.description,
+  type: "article",
 });
 
 const goHome = () => navigateTo("/");
@@ -213,16 +210,6 @@ const goHome = () => navigateTo("/");
   }
 }
 
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s var(--ease-dock), transform 0.7s var(--ease-dock);
-  transition-delay: var(--reveal-delay, 0s);
-}
-[data-reveal].is-in {
-  opacity: 1;
-  transform: translateY(0);
-}
 :deep(.prose-reveal) {
   opacity: 0;
   transform: translateY(24px);
@@ -231,12 +218,5 @@ const goHome = () => navigateTo("/");
 :deep(.prose-reveal.is-in) {
   opacity: 1;
   transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 </style>

@@ -18,10 +18,10 @@
     </NuxtLink>
 
     <div class="hero-block">
-      <div class="hero-name">
-        <div class="hero-line-1">Hi.</div>
-        <div class="hero-line-2">I'm Shahid</div>
-      </div>
+      <component :is="state === 'index' ? 'h1' : 'div'" class="hero-name">
+        <span class="hero-line-1">Hi.</span>
+        <span class="hero-line-2">I'm Shahid</span>
+      </component>
 
       <nav class="hero-socials" aria-label="Social links">
         <a

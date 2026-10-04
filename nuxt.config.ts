@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 
   css: [
     "~/assets/css/main.css",
+    "~/assets/css/case.css",
     "@fontsource-variable/google-sans-flex/wght.css",
     "@fontsource-variable/google-sans-code",
   ],
@@ -57,7 +58,6 @@ export default defineNuxtConfig({
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "description", content: "shhyydh's portfolio: journey, projects, and contact." },
       ],
-      link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
       htmlAttrs: { lang: "en" },
     },
   },

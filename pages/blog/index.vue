@@ -42,14 +42,9 @@ import { useScrollReveal } from "~/composables/useScrollReveal";
 
 useScrollReveal();
 
-useHead({
+usePageSeo({
   title: "My writings — shhyydh",
-  meta: [
-    {
-      name: "description",
-      content: "Long-form writing from shhyydh: the Building BezgoFresh series and the learnings behind it.",
-    },
-  ],
+  description: "Long-form writing from shhyydh: the Building BezgoFresh series and the learnings behind it.",
 });
 
 const goHome = () => navigateTo("/");
@@ -213,21 +208,4 @@ const posts = computed(() => (data.value ?? []).filter((post) => post.draft !== 
   color: var(--color-ink);
 }
 
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s var(--ease-dock), transform 0.7s var(--ease-dock);
-  transition-delay: var(--reveal-delay, 0s);
-}
-[data-reveal].is-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
 </style>
